@@ -1,0 +1,25 @@
+#exclude all
+*
+
+#allow directories
+!*/
+
+#exclude build folders
+bin
+debug
+obj
+cmake-build-debug
+
+#allow c# files
+!*.cs
+!*.csproj
+!*.sln
+
+#allow c++ files
+!*.cpp
+!*.hpp
+!CMakeLists.txt
+
+#allow the readme and gitignore
+!*.md
+!.gitignore

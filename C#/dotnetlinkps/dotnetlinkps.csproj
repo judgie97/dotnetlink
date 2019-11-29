@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\dotnetlink\dotnetlink.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Management.Automation, Version=6.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+        <HintPath>\opt\microsoft\powershell\6\System.Management.Automation.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
