@@ -4,10 +4,10 @@ namespace dotnetlink
 {
     public struct NetlinkRoute4
     {
-        private uint destination;
-        private uint nic;
-        private uint gateway;
-        private byte netmask;
+        public uint destination;
+        public uint nic;
+        public uint gateway;
+        public byte netmask;
 
         public Route4 toRoute4()
         {

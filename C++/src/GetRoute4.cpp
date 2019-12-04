@@ -1,43 +1,12 @@
 #include <linux/netlink.h>
 #include <sys/socket.h>
-#include <cstring>
-#include <linux/rtnetlink.h>
-#include <ctime>
-#include <cerrno>
-#include <libnet.h>
 #include <vector>
+#include <linux/rtnetlink.h>
+#include <cstring>
+#include <ctime>
+
+#include "SocketOperations.hpp"
 #include "Netlink.hpp"
-
-int openNetlinkSocket(unsigned int portID)
-{
-  struct sockaddr_nl saddr;
-
-  int sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
-  if(sock < 0)
-    return COULD_NOT_OPEN_NETLINK_SOCKET;
-  memset(&saddr, 0, sizeof(saddr));
-  saddr.nl_family = AF_NETLINK;
-  saddr.nl_pid = portID;
-  if(bind(sock, (struct sockaddr*)&saddr, sizeof(saddr)) < 0)
-    return COULD_NOT_BIND_SOCKET_TO_NETLINK;
-  return sock;
-}
-
-int receiveMessage(int sock, struct msghdr* header, int flags)
-{
-  int length;
-  do {
-    length = recvmsg(sock, header, flags);
-  } while(length < 0 && (errno == EINTR || errno == EAGAIN));
-
-  if(length < 0)
-    return UNABLE_TO_RECEIVE_FROM_NETLINK;
-  if(length == 0)
-    return NO_DATA_ON_NETLINK_SOCKET;
-
-  return length;
-}
-
 
 int receiveAllRoutesMessage(int sock, unsigned char** storage)
 {
@@ -96,7 +65,7 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
       continue;
     }
 
-    struct rtmsg* routeMessage = (struct rtmsg*)NLMSG_DATA(header);
+    struct rtmsg* routeMessage = (struct rtmsg*) NLMSG_DATA(header);
     struct rtattr* attributes[RTA_MAX + 1];
     memset(attributes, 0, sizeof(attributes));
     struct rtmsg* r = routeMessage;
@@ -118,11 +87,11 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
       memset(&route, 0, sizeof(route));
       route.netmask = r->rtm_dst_len;
       if(attributes[RTA_DST])
-        route.destination = *(unsigned int *)RTA_DATA(attributes[RTA_DST]);
+        route.destination = *(unsigned int*) RTA_DATA(attributes[RTA_DST]);
       if(attributes[RTA_OIF])
-        route.interface = *(unsigned int *)RTA_DATA(attributes[RTA_OIF]);
+        route.interface = *(unsigned int*) RTA_DATA(attributes[RTA_OIF]);
       if(attributes[RTA_GATEWAY])
-        route.gateway = *(unsigned int *)RTA_DATA(attributes[RTA_GATEWAY]);
+        route.gateway = *(unsigned int*) RTA_DATA(attributes[RTA_GATEWAY]);
 
       routes.push_back(route);
     }
@@ -134,15 +103,16 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
   memcpy(answer, routes.data(), sizeof(route4) * routes.size());
   *storage = answer;
 
-  receiveMessage(sock, &msg, 0); //flush
+  flushSocket(sock);
+
   delete[] buffer;
   return routes.size();
 }
 
-
 int requestAllRoutes(int sock, unsigned char** storage)
 {
-  struct {
+  struct
+  {
     struct nlmsghdr nlh;
     struct rtmsg rtm;
   } nl_request;
@@ -155,9 +125,4 @@ int requestAllRoutes(int sock, unsigned char** storage)
   send(sock, &nl_request, sizeof(nl_request), 0);
 
   return receiveAllRoutesMessage(sock, storage);
-}
-
-int closeNetlinkSocket(int socket)
-{
-  return close(socket);
 }

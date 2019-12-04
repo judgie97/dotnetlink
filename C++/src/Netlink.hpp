@@ -10,11 +10,7 @@
 #define NO_DATA_ON_NETLINK_SOCKET -32
 #define NETLINK_DUMP_INTERUPTED -64
 #define NETLINK_ERROR -128
-
-//EXPORTED FUNCTIONS
-DNL_API int openNetlinkSocket(unsigned int portID);
-DNL_API int requestAllRoutes(int sock, unsigned char** storage);
-DNL_API int closeNetlinkSocket(int socket);
+#define ROUTE_MESSAGE_TOO_LONG -256
 
 //TYPES
 struct route4
@@ -24,4 +20,12 @@ struct route4
   unsigned int gateway;
   unsigned char netmask;
 };
+
+//EXPORTED FUNCTIONS
+DNL_API int openNetlinkSocket(unsigned int portID);
+DNL_API int requestAllRoutes(int sock, unsigned char** storage);
+DNL_API int closeNetlinkSocket(int socket);
+
+DNL_API int addRoute(int sock, unsigned int portID, route4* route);
+
 
