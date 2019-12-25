@@ -27,5 +27,6 @@ DNL_API int requestAllRoutes(int sock, unsigned char** storage);
 DNL_API int closeNetlinkSocket(int socket);
 
 DNL_API int addRoute(int sock, unsigned int portID, route4* route);
+DNL_API int removeRoute(int sock, unsigned int portID, route4* route);
 
 

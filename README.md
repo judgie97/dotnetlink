@@ -7,11 +7,10 @@ These tools are created and tested on version 5.3 of the linux kernel using .net
 ## Features
 ### Routing (IPv4)
 * Get the current routing table
+* Add a route to the routing table
+* Remove a route from the routing table
 
 ## Features (TODO)
-### Routing (IPv4)
-* Add / Remove static routes from the routing table
-
 ### Address management (IPv4)
 * Get the IPv4 address / subnet mask of an interface
 * Add / Remove IPv4 addresses / subnet mask to an interface

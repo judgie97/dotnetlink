@@ -1,7 +1,6 @@
 #include "Test.hpp"
 #include <zconf.h>
-#include <iostream>
-#include <libnet.h>
+#include <arpa/inet.h>
 
 int main(void)
 {
@@ -16,6 +15,6 @@ int main(void)
   route.netmask = 24;
   route.interface = 0;
 
-  addRoute(sock, getpid(), &route);
+  removeRoute(sock, getpid(), &route);
   return 0;
 }

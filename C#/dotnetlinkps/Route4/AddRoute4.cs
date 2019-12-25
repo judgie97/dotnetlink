@@ -9,8 +9,6 @@ namespace dotnetlinkps
         public class GetRoute4 : PSCmdlet
         {
             private NetlinkSocket socket;
-
-            private Route4[] routes;
             
             [Parameter]
             public Route4 route;
