@@ -7,7 +7,7 @@
 #include "SocketOperations.hpp"
 #include "RTMOperations.hpp"
 
-int addRoute(int sock, unsigned int portID, route4* route)
+int addRoute(int sock, unsigned int portID, Route4* route)
 {
   struct
   {
@@ -23,7 +23,6 @@ int addRoute(int sock, unsigned int portID, route4* route)
   nl_request.nlh.nlmsg_len = sizeof(nl_request) - 4096;
   nl_request.nlh.nlmsg_seq = time(NULL);
   nl_request.nlh.nlmsg_pid = portID;
-  nl_request.rtm.rtm_family = AF_INET;
 
   nl_request.rtm.rtm_family = AF_INET;
   nl_request.rtm.rtm_src_len = 0;

@@ -21,6 +21,9 @@ namespace dotnetlink
         [DllImport("libdotnetlinkconnector.so")]
         private static extern unsafe int removeRoute(int sock, uint portID, NetlinkRoute4* route);
         
+        [DllImport("libdotnetlinkconnector.so")]
+        private static extern unsafe int addIPAddress(int sock, uint portID, NetlinkIPAddress4* address);
+        
         private int m_sockfd;
         private uint m_pid;
         public NetlinkSocket()
@@ -73,5 +76,14 @@ namespace dotnetlink
             removeRoute(m_sockfd, m_pid, &nlr);
         }
 
+        public unsafe void addIPAddress(IPAddress4 address)
+        {
+            NetlinkIPAddress4 ip4 = new NetlinkIPAddress4();
+            ip4.address = Util.ip4touint(address.address);
+            ip4.netmask = address.netmask;
+            ip4.nic = address.nic;
+
+            addIPAddress(m_sockfd, m_pid, &ip4);
+        }
     }
 }

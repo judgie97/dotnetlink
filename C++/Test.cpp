@@ -5,16 +5,9 @@
 int main(void)
 {
   int sock = openNetlinkSocket(getpid());
-  unsigned char* storage;
 
-  requestAllRoutes(sock, &storage);
+  IPAddress4 a = {inet_addr("192.168.1.5"), 24, 2};
+  addIPAddress(sock, getpid(), &a);
 
-  route4 route;
-  route.destination = inet_addr("192.168.2.0");
-  route.gateway = inet_addr("192.168.1.1");
-  route.netmask = 24;
-  route.interface = 0;
-
-  removeRoute(sock, getpid(), &route);
   return 0;
 }

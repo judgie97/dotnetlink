@@ -6,7 +6,7 @@
 #include "SocketOperations.hpp"
 #include "RTMOperations.hpp"
 
-int removeRoute(int sock, unsigned int portID, route4* route)
+int removeRoute(int sock, unsigned int portID, Route4* route)
 {
     struct
     {

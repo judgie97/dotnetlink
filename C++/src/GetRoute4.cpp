@@ -44,7 +44,7 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
   struct nlmsghdr* header = (struct nlmsghdr*) buffer;
   int remainingLength = length;
 
-  std::vector<route4> routes;
+  std::vector<Route4> routes;
 
   while(NLMSG_OK(header, remainingLength))
   {
@@ -83,7 +83,7 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
 
     if(r->rtm_family == AF_INET && routingTable == RT_TABLE_MAIN)
     {
-      route4 route;
+      Route4 route;
       memset(&route, 0, sizeof(route));
       route.netmask = r->rtm_dst_len;
       route.protocol = r->rtm_protocol;
@@ -100,8 +100,8 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
 
   }
 
-  unsigned char* answer = new unsigned char[sizeof(route4) * routes.size()];
-  memcpy(answer, routes.data(), sizeof(route4) * routes.size());
+  unsigned char* answer = new unsigned char[sizeof(Route4) * routes.size()];
+  memcpy(answer, routes.data(), sizeof(Route4) * routes.size());
   *storage = answer;
 
   flushSocket(sock);

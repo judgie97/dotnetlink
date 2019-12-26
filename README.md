@@ -10,10 +10,13 @@ These tools are created and tested on version 5.3 of the linux kernel using .net
 * Add a route to the routing table
 * Remove a route from the routing table
 
+### Address management (IPv4)
+* Add an IPv4 address to an interface
+
 ## Features (TODO)
 ### Address management (IPv4)
 * Get the IPv4 address / subnet mask of an interface
-* Add / Remove IPv4 addresses / subnet mask to an interface
+* Remove IPv4 addresses / subnet mask to an interface
 
 ### Link management
 * Set link status to up or down

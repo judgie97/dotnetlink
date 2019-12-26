@@ -13,7 +13,7 @@
 #define ROUTE_MESSAGE_TOO_LONG -256
 
 //TYPES
-struct route4
+struct Route4
 {
   unsigned int destination;
   unsigned int interface;
@@ -22,12 +22,24 @@ struct route4
   unsigned char protocol;
 };
 
+struct IPAddress4
+{
+    unsigned int address;
+    unsigned int interface;
+    unsigned char prefixLength;
+};
+
 //EXPORTED FUNCTIONS
 DNL_API int openNetlinkSocket(unsigned int portID);
-DNL_API int requestAllRoutes(int sock, unsigned char** storage);
 DNL_API int closeNetlinkSocket(int socket);
 
-DNL_API int addRoute(int sock, unsigned int portID, route4* route);
-DNL_API int removeRoute(int sock, unsigned int portID, route4* route);
+//ROUTING
+DNL_API int requestAllRoutes(int sock, unsigned char** storage);
+DNL_API int addRoute(int sock, unsigned int portID, Route4* route);
+DNL_API int removeRoute(int sock, unsigned int portID, Route4* route);
+
+//ADDRESSING
+DNL_API int addIPAddress(int sock, unsigned int portID, IPAddress4* address);
+
 
 
