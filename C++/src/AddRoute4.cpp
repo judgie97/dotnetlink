@@ -30,7 +30,7 @@ int addRoute(int sock, unsigned int portID, route4* route)
   nl_request.rtm.rtm_dst_len = route->netmask;
   nl_request.rtm.rtm_tos = 0;
   nl_request.rtm.rtm_table = RT_TABLE_MAIN;
-  nl_request.rtm.rtm_protocol = RTPROT_STATIC;
+  nl_request.rtm.rtm_protocol = route->protocol;
   nl_request.rtm.rtm_scope = RT_SCOPE_UNIVERSE;
   nl_request.rtm.rtm_type = RTN_UNICAST;
 

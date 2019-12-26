@@ -24,7 +24,7 @@ int removeRoute(int sock, unsigned int portID, route4* route)
     nl_request.rtm.rtm_dst_len = route->netmask;
     nl_request.rtm.rtm_src_len = 0;
     nl_request.rtm.rtm_table = RT_TABLE_MAIN;
-    nl_request.rtm.rtm_protocol = RTPROT_UNSPEC;
+    nl_request.rtm.rtm_protocol = route->protocol;
     nl_request.rtm.rtm_tos = 0;
     nl_request.rtm.rtm_scope = RT_SCOPE_NOWHERE;
 

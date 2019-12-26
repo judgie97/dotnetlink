@@ -28,7 +28,7 @@ namespace dotnetlinkps
 
         protected override void EndProcessing()
         {
-            WriteObject(new Route4(destination, netmask, gateway, 0));
+            WriteObject(new Route4(destination, netmask, gateway, 0, (RoutingProtocol) 4));
         }
 
         protected override void StopProcessing()

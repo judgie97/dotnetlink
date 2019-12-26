@@ -19,6 +19,7 @@ struct route4
   unsigned int interface;
   unsigned int gateway;
   unsigned char netmask;
+  unsigned char protocol;
 };
 
 //EXPORTED FUNCTIONS

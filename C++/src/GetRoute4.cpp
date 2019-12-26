@@ -86,6 +86,7 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
       route4 route;
       memset(&route, 0, sizeof(route));
       route.netmask = r->rtm_dst_len;
+      route.protocol = r->rtm_protocol;
       if(attributes[RTA_DST])
         route.destination = *(unsigned int*) RTA_DATA(attributes[RTA_DST]);
       if(attributes[RTA_OIF])

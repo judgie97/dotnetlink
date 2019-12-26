@@ -56,6 +56,7 @@ namespace dotnetlink
             nlr.gateway = Util.ip4touint(route.gateway);
             nlr.netmask = route.netmask;
             nlr.nic = 0;
+            nlr.protocol = (byte)route.protocol;
 
             addRoute(m_sockfd, m_pid, &nlr);
         }
@@ -66,6 +67,7 @@ namespace dotnetlink
             nlr.destination = Util.ip4touint(route.destination);
             nlr.gateway = Util.ip4touint(route.gateway);
             nlr.netmask = route.netmask;
+            nlr.protocol = (byte) RoutingProtocol.Unspecified;
             nlr.nic = 0;
 
             removeRoute(m_sockfd, m_pid, &nlr);
