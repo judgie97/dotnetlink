@@ -40,6 +40,4 @@ DNL_API int removeRoute(int sock, unsigned int portID, Route4* route);
 
 //ADDRESSING
 DNL_API int addIPAddress(int sock, unsigned int portID, IPAddress4* address);
-
-
-
+DNL_API int removeIPAddress(int sock, unsigned int portID, IPAddress4* address);
