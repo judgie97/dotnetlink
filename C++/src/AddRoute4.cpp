@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include "Netlink.hpp"
 #include "SocketOperations.hpp"
-#include "RTMOperations.hpp"
+#include "TLVOperations.hpp"
 
 int addRoute(int sock, unsigned int portID, Route4* route)
 {
@@ -36,11 +36,11 @@ int addRoute(int sock, unsigned int portID, Route4* route)
   unsigned int dst = route->destination;
   unsigned int gw = route->gateway;
 
-  int result = addAttributeToMessage(&nl_request.nlh, sizeof(nl_request), RTA_DST, &dst, 4);
+  int result = addTLVToMessage(&nl_request.nlh, sizeof(nl_request), RTA_DST, &dst, 4);
   if(result < 0)
     return result;
 
-  result = addAttributeToMessage(&nl_request.nlh, sizeof(nl_request), RTA_GATEWAY, &gw, 4);
+  result = addTLVToMessage(&nl_request.nlh, sizeof(nl_request), RTA_GATEWAY, &gw, 4);
   if(result < 0)
     return result;
 

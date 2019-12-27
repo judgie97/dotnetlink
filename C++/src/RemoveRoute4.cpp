@@ -4,7 +4,7 @@
 #include <linux/rtnetlink.h>
 #include "Netlink.hpp"
 #include "SocketOperations.hpp"
-#include "RTMOperations.hpp"
+#include "TLVOperations.hpp"
 
 int removeRoute(int sock, unsigned int portID, Route4* route)
 {
@@ -29,7 +29,7 @@ int removeRoute(int sock, unsigned int portID, Route4* route)
     nl_request.rtm.rtm_scope = RT_SCOPE_NOWHERE;
 
     unsigned int dst = route->destination;
-    int result = addAttributeToMessage(&nl_request.nlh, sizeof(nl_request), RTA_DST, &dst, 4);
+    int result = addTLVToMessage(&nl_request.nlh, sizeof(nl_request), RTA_DST, &dst, 4);
     if(result < 0)
         return result;
 

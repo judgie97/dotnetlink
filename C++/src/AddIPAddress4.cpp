@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include "Netlink.hpp"
 #include "SocketOperations.hpp"
-#include "RTMOperations.hpp"
+#include "TLVOperations.hpp"
 
 int addIPAddress(int sock, unsigned int portID, IPAddress4* address)
 {
@@ -31,11 +31,11 @@ int addIPAddress(int sock, unsigned int portID, IPAddress4* address)
     nl_request.addrmsg.ifa_scope = RT_SCOPE_UNIVERSE;
     nl_request.addrmsg.ifa_index = address->interface;
 
-    int result = addAttributeToMessage(&nl_request.nlh, sizeof(nl_request), IFA_ADDRESS, &address->address, 4);
+    int result = addTLVToMessage(&nl_request.nlh, sizeof(nl_request), IFA_ADDRESS, &address->address, 4);
     if(result < 0)
         return result;
 
-    result = addAttributeToMessage(&nl_request.nlh, sizeof(nl_request), IFA_LOCAL, &address->address, 4);
+    result = addTLVToMessage(&nl_request.nlh, sizeof(nl_request), IFA_LOCAL, &address->address, 4);
     if(result < 0)
         return result;
 

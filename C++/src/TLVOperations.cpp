@@ -1,16 +1,16 @@
-#include "RTMOperations.hpp"
+#include "TLVOperations.hpp"
 #include <linux/rtnetlink.h>
 #include <cstring>
 #include "Netlink.hpp"
 
-int addAttributeToMessage(struct nlmsghdr *n, int maxLength, int type, const void* data, int attributeLength)
+int addTLVToMessage(struct nlmsghdr *n, int maxLength, int type, const void* data, int attributeLength)
 {
     int len = RTA_LENGTH(attributeLength);
     struct rtattr *rta;
 
     int messageLength = NLMSG_ALIGN(n->nlmsg_len) + RTA_ALIGN(len);
     if (messageLength > maxLength) {
-        return ROUTE_MESSAGE_TOO_LONG;
+        return TLV_BREACHES_MESSAGE_LENGTH;
     }
 
     rta = ((struct rtattr *) (((unsigned char *) (n)) + NLMSG_ALIGN((n)->nlmsg_len)));
