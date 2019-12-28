@@ -5,9 +5,7 @@
 int main(void)
 {
   int sock = openNetlinkSocket(getpid());
-
-  IPAddress4 a = {inet_addr("192.168.1.5"), 2, 24};
-  removeIPAddress(sock, getpid(), &a);
-
+  unsigned char* storage;
+  requestAllAddresses(sock, &storage);
   return 0;
 }

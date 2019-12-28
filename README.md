@@ -11,12 +11,10 @@ These tools are created and tested on version 5.3 of the linux kernel using .net
 * Remove a route from the routing table
 
 ### Address management (IPv4)
-* Add an IPv4 address to an interface#
+* Get the current addresses assigned to interfaces
+* Add an IPv4 address to an interface
 * Remove an IPv4 address from an interface
 
 ## Features (TODO)
-### Address management (IPv4)
-* Get the IPv4 address / subnet mask of an interface
-
 ### Link management
 * Set link status to up or down

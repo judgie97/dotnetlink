@@ -27,6 +27,9 @@ namespace dotnetlink
         [DllImport("libdotnetlinkconnector.so")]
         private static extern unsafe int removeIPAddress(int sock, uint portID, NetlinkIPAddress4* address);
 
+        [DllImport("libdotnetlinkconnector.so")]
+        private static extern unsafe int requestAllAddresses(int sock, byte** storage);
+        
         private int m_sockfd;
         private uint m_pid;
         public NetlinkSocket()
@@ -97,6 +100,21 @@ namespace dotnetlink
             ip4.nic = address.nic;
 
             removeIPAddress(m_sockfd, m_pid, &ip4);
+        }
+        
+        public unsafe IPAddress4[] getAddresses()
+        {
+            byte* netlinkAddresses;
+            int count = requestAllAddresses(m_sockfd, &netlinkAddresses);
+            byte* currentAddress = netlinkAddresses;
+            IPAddress4[] addresses = new IPAddress4[count];
+            for (int i = 0; i < count; i++)
+            {
+                NetlinkIPAddress4 a = (NetlinkIPAddress4) Marshal.PtrToStructure((IntPtr) currentAddress, typeof(NetlinkIPAddress4));
+                currentAddress += sizeof(NetlinkIPAddress4);
+                addresses[i] = a.toIPAddress4();
+            }
+            return addresses;
         }
     }
 }
