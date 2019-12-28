@@ -97,6 +97,7 @@ int receiveAllAddresses(int sock, unsigned char** storage)
 
     *storage = (unsigned char*)malloc(addresses.size() * sizeof(IPAddress4));
     memcpy(*storage, addresses.data(), addresses.size() * sizeof(IPAddress4));
+    flushSocket(sock);
     return addresses.size();
 }
 
