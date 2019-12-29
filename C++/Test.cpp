@@ -1,6 +1,5 @@
 #include "Test.hpp"
 #include <zconf.h>
-#include <arpa/inet.h>
 #include <iostream>
 
 int main(void)

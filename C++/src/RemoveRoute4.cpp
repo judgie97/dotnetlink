@@ -3,7 +3,6 @@
 #include <sys/socket.h>
 #include <linux/rtnetlink.h>
 #include "Netlink.hpp"
-#include "SocketOperations.hpp"
 #include "TLVOperations.hpp"
 
 int removeRoute(int sock, unsigned int portID, Route4* route)

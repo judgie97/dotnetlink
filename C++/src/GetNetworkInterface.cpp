@@ -4,7 +4,6 @@
 #include <ctime>
 #include <sys/socket.h>
 #include <vector>
-#include <malloc.h>
 #include <cstring>
 #include <net/if.h>
 #include <iostream>
