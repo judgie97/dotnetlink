@@ -98,7 +98,8 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
       }
       if(a->type == IFLA_IFNAME)
       {
-        memcpy(interface.interfaceName, a->value, a->length - 4);
+        int nameLength = a->length - 4;
+        memcpy(interface.interfaceName, a->value, nameLength < 21 ? nameLength : 20);
       }
       position += ALIGN_TLV(a->length);
       a = (attribute*) (((unsigned char*) a) + ALIGN_TLV(a->length));
