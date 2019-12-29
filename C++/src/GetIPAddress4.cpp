@@ -9,6 +9,7 @@
 
 #include "Netlink.hpp"
 #include "SocketOperations.hpp"
+#include "TLVOperations.hpp"
 
 int receiveAllAddresses(int sock, unsigned char** storage)
 {
@@ -84,8 +85,8 @@ int receiveAllAddresses(int sock, unsigned char** storage)
       {
         address.address = *(unsigned int*) a->value;
       }
-      position += a->length;
-      a = (attribute*) (((unsigned char*) a) + a->length);
+      position += ALIGN_TLV(a->length);
+      a = (attribute*) (((unsigned char*) a) + ALIGN_TLV(a->length));
     }
     addresses.push_back(address);
     header = NLMSG_NEXT(header, remainingLength);
