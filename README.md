@@ -15,6 +15,9 @@ These tools are created and tested on version 5.3 of the linux kernel using .net
 * Add an IPv4 address to an interface
 * Remove an IPv4 address from an interface
 
+### Interface management
+* Get link details
+
 ## Features (TODO)
-### Link management
+### Interface management
 * Set link status to up or down

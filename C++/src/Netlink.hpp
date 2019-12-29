@@ -24,9 +24,21 @@ struct Route4
 
 struct IPAddress4
 {
-    unsigned int address;
-    unsigned int interface;
-    unsigned char prefixLength;
+  unsigned int address;
+  unsigned int interface;
+  unsigned char prefixLength;
+};
+
+struct NetworkInterface
+{
+  unsigned int index;
+  unsigned char hardwareAddress[6];
+  bool isUp;
+  bool isBroadcastInterface;
+  bool isLoopbackInterface;
+  bool isPointToPointInterface;
+  bool isNBMAInterface;
+  bool isPromiscuousInterface;
 };
 
 //EXPORTED FUNCTIONS
@@ -42,3 +54,6 @@ DNL_API int removeRoute(int sock, unsigned int portID, Route4* route);
 DNL_API int addIPAddress(int sock, unsigned int portID, IPAddress4* address);
 DNL_API int removeIPAddress(int sock, unsigned int portID, IPAddress4* address);
 DNL_API int requestAllAddresses(int sock, unsigned char** storage);
+
+//NETWORK INTERFACES
+DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);

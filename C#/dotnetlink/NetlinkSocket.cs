@@ -30,6 +30,9 @@ namespace dotnetlink
         [DllImport("libdotnetlinkconnector.so")]
         private static extern unsafe int requestAllAddresses(int sock, byte** storage);
         
+        [DllImport("libdotnetlinkconnector.so")]
+        private static extern unsafe int requestAllNetworkInterfaces(int sock, byte** storage);
+        
         private int m_sockfd;
         private uint m_pid;
         public NetlinkSocket()
@@ -115,6 +118,21 @@ namespace dotnetlink
                 addresses[i] = a.toIPAddress4();
             }
             return addresses;
+        }
+        
+        public unsafe NetworkInterface[] getNetworkInterfaces()
+        {
+            byte* netlinkInterfaces;
+            int count = requestAllNetworkInterfaces(m_sockfd, &netlinkInterfaces);
+            byte* currentInterface = netlinkInterfaces;
+            NetworkInterface[] interfaces = new NetworkInterface[count];
+            for (int i = 0; i < count; i++)
+            {
+                NetlinkInterface a = (NetlinkInterface) Marshal.PtrToStructure((IntPtr) currentInterface, typeof(NetlinkInterface));
+                currentInterface += sizeof(NetlinkInterface);
+                interfaces[i] = a.toNetworkInterface();
+            }
+            return interfaces;
         }
     }
 }
