@@ -19,7 +19,7 @@ int addRoute(int sock, unsigned int portID, Route4* route)
   memset(&nl_request, 0, sizeof(nl_request));
 
   nl_request.nlh.nlmsg_type = RTM_NEWROUTE;
-  nl_request.nlh.nlmsg_flags = NLM_F_REQUEST|NLM_F_CREATE;
+  nl_request.nlh.nlmsg_flags = NLM_F_REQUEST | NLM_F_CREATE;
   nl_request.nlh.nlmsg_len = sizeof(nl_request) - 4096;
   nl_request.nlh.nlmsg_seq = time(NULL);
   nl_request.nlh.nlmsg_pid = portID;

@@ -13,7 +13,6 @@
 #include "SocketOperations.hpp"
 #include "TLVOperations.hpp"
 
-
 int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interfaces)
 {
   struct sockaddr_nl nladdr;
@@ -29,13 +28,10 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
   iov.iov_len = 0;
 
   int length = receiveMessage(sock, &msg, MSG_PEEK | MSG_TRUNC | MSG_DONTWAIT);
-
   if(length <= 0)
     return length;
 
   char* buffer = new char[length];
-
-
   iov.iov_len = length;
   iov.iov_base = buffer;
 

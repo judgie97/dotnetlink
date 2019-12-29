@@ -23,13 +23,10 @@ int receiveAllRoutesMessage(int sock, unsigned char** storage)
   iov.iov_len = 0;
 
   int length = receiveMessage(sock, &msg, MSG_PEEK | MSG_TRUNC);
-
   if(length <= 0)
     return length;
 
   char* buffer = new char[length];
-
-
   iov.iov_len = length;
   iov.iov_base = buffer;
 
