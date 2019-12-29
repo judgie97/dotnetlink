@@ -80,7 +80,7 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
     interface.isNBMAInterface = !(interface.isBroadcastInterface || interface.isLoopbackInterface ||
                                   interface.isPointToPointInterface);
     interface.isPromiscuousInterface = infoMessage->ifi_flags & IFF_PROMISC;
-
+    memset(interface.interfaceName, 0, 21);
 
     unsigned char* attributes = ((unsigned char*) header) + sizeof(nlmsghdr) + sizeof(ifinfomsg);
     struct attribute
@@ -100,6 +100,10 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
       if(a->type == IFLA_OPERSTATE)
       {
         interface.isUp = a->value[0];
+      }
+      if(a->type == IFLA_IFNAME)
+      {
+        memcpy(interface.interfaceName, a->value, a->length - 4);
       }
       position += ALIGN_TLV(a->length);
       a = (attribute*) (((unsigned char*) a) + ALIGN_TLV(a->length));

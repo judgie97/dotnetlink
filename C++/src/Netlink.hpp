@@ -33,6 +33,7 @@ struct NetworkInterface
 {
   unsigned int index;
   unsigned char hardwareAddress[6];
+  unsigned char interfaceName[21];
   bool isUp;
   bool isBroadcastInterface;
   bool isLoopbackInterface;
