@@ -1,7 +1,7 @@
 #include <linux/netlink.h>
 #include <sys/socket.h>
 #include <cstring>
-#include <zconf.h>
+#include <unistd.h>
 #include "Netlink.hpp"
 
 int openNetlinkSocket(unsigned int portID)
