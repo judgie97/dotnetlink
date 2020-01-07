@@ -17,7 +17,4 @@ These tools are created and tested on version 5.3 of the linux kernel using .net
 
 ### Interface management
 * Get link details
-
-## Features (TODO)
-### Interface management
-* Set link status to up or down
+* Set link to up or down

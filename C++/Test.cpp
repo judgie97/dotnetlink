@@ -5,7 +5,6 @@
 int main(void)
 {
   int sock = openNetlinkSocket(getpid());
-  unsigned char* storage;
-  std::cout << requestAllNetworkInterfaces(sock, &storage) << std::endl;
+  setNetworkInterface(sock, getpid(), 2, false);
   return 0;
 }

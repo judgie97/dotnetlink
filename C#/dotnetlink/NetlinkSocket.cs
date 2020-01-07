@@ -33,6 +33,9 @@ namespace dotnetlink
         [DllImport("libdotnetlinkconnector.so")]
         private static extern unsafe int requestAllNetworkInterfaces(int sock, byte** storage);
         
+        [DllImport("libdotnetlinkconnector.so")]
+        private static extern unsafe int setNetworkInterface(int sock, uint portID, uint interfaceIndex, bool up);
+        
         private int m_sockfd;
         private uint m_pid;
         public NetlinkSocket()
@@ -133,6 +136,11 @@ namespace dotnetlink
                 interfaces[i] = a.toNetworkInterface();
             }
             return interfaces;
+        }
+        
+        public unsafe void setNetworkInterface(NetworkInterface networkInterface, bool up)
+        {
+            setNetworkInterface(m_sockfd, m_pid, networkInterface.index, up);
         }
     }
 }

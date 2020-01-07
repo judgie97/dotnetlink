@@ -58,3 +58,4 @@ DNL_API int requestAllAddresses(int sock, unsigned char** storage);
 
 //NETWORK INTERFACES
 DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
+DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);

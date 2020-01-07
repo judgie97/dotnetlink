@@ -72,6 +72,7 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
     interface.isBroadcastInterface = infoMessage->ifi_flags & IFF_BROADCAST;
     interface.isLoopbackInterface = infoMessage->ifi_flags & IFF_LOOPBACK;
     interface.isPointToPointInterface = infoMessage->ifi_flags & IFF_POINTOPOINT;
+    interface.isUp = infoMessage->ifi_flags & IFF_UP;
     interface.isNBMAInterface = !(interface.isBroadcastInterface || interface.isLoopbackInterface ||
                                   interface.isPointToPointInterface);
     interface.isPromiscuousInterface = infoMessage->ifi_flags & IFF_PROMISC;
@@ -91,10 +92,6 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
       if(a->type == IFLA_ADDRESS)
       {
         memcpy(interface.hardwareAddress, a->value, 6);
-      }
-      if(a->type == IFLA_OPERSTATE)
-      {
-        interface.isUp = a->value[0];
       }
       if(a->type == IFLA_IFNAME)
       {
