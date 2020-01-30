@@ -1,8 +1,10 @@
 using System;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 
 namespace dotnetlink
 {
+    [StructLayout(LayoutKind.Sequential, Pack=1)]
     public unsafe struct NetlinkInterface
     {
         public uint index;

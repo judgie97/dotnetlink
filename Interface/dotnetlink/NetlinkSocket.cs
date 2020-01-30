@@ -6,8 +6,10 @@ namespace dotnetlink
 {
     public class NetlinkSocket
     {
+        private static int NETLINK_ROUTE = 0;
+        
         [DllImport("libdotnetlinkconnector.so")]
-        private static extern int openNetlinkSocket(uint portID);
+        private static extern int openNetlinkSocket(uint portID, int protocol);
 
         [DllImport("libdotnetlinkconnector.so")]
         private static extern unsafe int requestAllRoutes(int sock, byte** storage);
@@ -41,7 +43,7 @@ namespace dotnetlink
         public NetlinkSocket()
         {
             m_pid = (uint)Process.GetCurrentProcess().Id;
-            m_sockfd = openNetlinkSocket(m_pid);
+            m_sockfd = openNetlinkSocket(m_pid, NETLINK_ROUTE);
         }
 
         ~NetlinkSocket()

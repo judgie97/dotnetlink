@@ -2,15 +2,20 @@ using dotnetlink;
 
 namespace dotnetlinkps
 {
-    public class SingletonRepository
+    internal static class SingletonRepository
     {
-        private static NetlinkSocket m_nlsock = null;
+        private static NetlinkSocket _netlinkSocket;
 
         public static NetlinkSocket getNetlinkSocket()
         {
-            if (m_nlsock == null)
-                m_nlsock = new NetlinkSocket();
-            return m_nlsock;
+            return _netlinkSocket ??= new NetlinkSocket();
+        }
+
+        private static NetfilterSocket _netfilterSocket;
+
+        public static NetfilterSocket getNetfilterSocket()
+        {
+            return _netfilterSocket ??= new NetfilterSocket();
         }
     }
 }

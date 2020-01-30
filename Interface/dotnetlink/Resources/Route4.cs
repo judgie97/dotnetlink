@@ -1,7 +1,9 @@
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace dotnetlink
 {
+    [StructLayout(LayoutKind.Sequential, Pack=1)]
     public struct NetlinkRoute4
     {
         public uint destination;
