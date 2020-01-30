@@ -20,6 +20,11 @@ cmake-build-debug
 !*.hpp
 !CMakeLists.txt
 
+#allow c files
+!*.c
+!*.h
+!Makefile
+
 #allow the readme and gitignore
 !*.md
 !.gitignore
