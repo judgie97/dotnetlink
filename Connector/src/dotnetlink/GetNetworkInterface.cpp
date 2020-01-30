@@ -8,9 +8,9 @@
 #include <net/if.h>
 #include <iostream>
 
-#include "Netlink.hpp"
-#include "SocketOperations.hpp"
-#include "TLVOperations.hpp"
+#include "../Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Socket/TLVOperations.hpp"
 
 int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interfaces)
 {

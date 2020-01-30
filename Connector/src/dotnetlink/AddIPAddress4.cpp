@@ -4,11 +4,11 @@
 #include <linux/rtnetlink.h>
 #include <ctime>
 #include <sys/socket.h>
-#include "Netlink.hpp"
-#include "SocketOperations.hpp"
-#include "TLVOperations.hpp"
+#include "../Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Socket/TLVOperations.hpp"
 
-int removeIPAddress(int sock, unsigned int portID, IPAddress4* address)
+int addIPAddress(int sock, unsigned int portID, IPAddress4* address)
 {
   struct
   {
@@ -19,8 +19,8 @@ int removeIPAddress(int sock, unsigned int portID, IPAddress4* address)
 
   memset(&nl_request, 0, sizeof(nl_request));
 
-  nl_request.nlh.nlmsg_type = RTM_DELADDR;
-  nl_request.nlh.nlmsg_flags = NLM_F_REQUEST;
+  nl_request.nlh.nlmsg_type = RTM_NEWADDR;
+  nl_request.nlh.nlmsg_flags = NLM_F_REQUEST | NLM_F_CREATE;
   nl_request.nlh.nlmsg_len = sizeof(nl_request) - 4096;
   nl_request.nlh.nlmsg_seq = time(NULL);
   nl_request.nlh.nlmsg_pid = portID;

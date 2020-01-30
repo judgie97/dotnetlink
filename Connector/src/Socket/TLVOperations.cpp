@@ -1,7 +1,7 @@
 #include "TLVOperations.hpp"
 #include <linux/rtnetlink.h>
 #include <cstring>
-#include "Netlink.hpp"
+#include "../Netlink.hpp"
 
 int addTLVToMessage(struct nlmsghdr* n, int maxLength, int type, const void* data, int attributeLength)
 {

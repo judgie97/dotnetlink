@@ -2,13 +2,13 @@
 #include <sys/socket.h>
 #include <cstring>
 #include <unistd.h>
-#include "Netlink.hpp"
+#include "../Netlink.hpp"
 
-int openNetlinkSocket(unsigned int portID)
+int openNetlinkSocket(unsigned int portID, int protocol)
 {
   struct sockaddr_nl saddr;
 
-  int sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  int sock = socket(AF_NETLINK, SOCK_RAW, protocol);
   if(sock < 0)
     return COULD_NOT_OPEN_NETLINK_SOCKET;
   memset(&saddr, 0, sizeof(saddr));

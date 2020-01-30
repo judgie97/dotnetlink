@@ -2,7 +2,7 @@
 #include <sys/socket.h>
 #include <cerrno>
 #include <linux/netlink.h>
-#include "Netlink.hpp"
+#include "../Netlink.hpp"
 
 int receiveMessage(int sock, struct msghdr* header, int flags)
 {

@@ -7,9 +7,9 @@
 #include <malloc.h>
 #include <cstring>
 
-#include "Netlink.hpp"
-#include "SocketOperations.hpp"
-#include "TLVOperations.hpp"
+#include "../Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Socket/TLVOperations.hpp"
 
 int receiveAllAddresses(int sock, unsigned char** storage)
 {

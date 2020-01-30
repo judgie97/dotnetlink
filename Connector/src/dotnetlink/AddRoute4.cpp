@@ -3,9 +3,9 @@
 #include <cstring>
 #include <ctime>
 #include <sys/socket.h>
-#include "Netlink.hpp"
-#include "SocketOperations.hpp"
-#include "TLVOperations.hpp"
+#include "../Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Socket/TLVOperations.hpp"
 
 int addRoute(int sock, unsigned int portID, Route4* route)
 {

@@ -5,9 +5,9 @@
 #include <cstring>
 #include <net/if.h>
 
-#include "Netlink.hpp"
-#include "SocketOperations.hpp"
-#include "TLVOperations.hpp"
+#include "../Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Socket/TLVOperations.hpp"
 
 int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up)
 {

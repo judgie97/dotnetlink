@@ -5,8 +5,8 @@
 #include <cstring>
 #include <ctime>
 
-#include "SocketOperations.hpp"
-#include "Netlink.hpp"
+#include "../Socket/SocketOperations.hpp"
+#include "../Netlink.hpp"
 
 int receiveAllRoutesMessage(int sock, unsigned char** storage)
 {
