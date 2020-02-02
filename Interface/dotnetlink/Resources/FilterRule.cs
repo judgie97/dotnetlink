@@ -85,8 +85,8 @@ namespace dotnetlink
         {
             this.sourceInterface = sourceInterface;
             this.destinationInterface = destinationInterface;
-            this.sourceSubnet = new Subnet(sourceAddress, sourceNetmask);
-            this.destinationSubnet = new Subnet(destinationAddress, destinationNetmask);
+            this.sourceSubnet = sourceAddress == null ? null : new Subnet(sourceAddress, sourceNetmask);
+            this.destinationSubnet = destinationAddress == null ? null : new Subnet(destinationAddress, destinationNetmask);
             this.protocol = protocol;
             this.sourcePort = sourcePort;
             this.destinationPort = destinationPort;
