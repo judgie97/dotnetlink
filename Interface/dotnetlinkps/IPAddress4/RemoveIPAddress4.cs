@@ -11,16 +11,12 @@ namespace dotnetlinkps
         {
             private NetlinkSocket socket;
 
-            [Parameter] public IPAddress address;
-
-            [Parameter] public byte netmask;
-
-            [Parameter] public uint nic;
+            [Parameter] public IPAddress4 address;
 
             protected override void BeginProcessing()
             {
                 socket = SingletonRepository.getNetlinkSocket();
-                socket.removeIPAddress(new IPAddress4(address, netmask, nic));
+                socket.removeIPAddress(address);
             }
 
             protected override void ProcessRecord()
