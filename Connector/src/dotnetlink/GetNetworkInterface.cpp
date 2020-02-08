@@ -66,6 +66,9 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
       continue;
     }
 
+    unsigned char linkType = DNL_IFT_PHYSICAL;
+
+
     struct ifinfomsg* infoMessage = (struct ifinfomsg*) NLMSG_DATA(header);
     NetworkInterface interface;
     interface.index = infoMessage->ifi_index;
@@ -76,7 +79,13 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
     interface.isNBMAInterface = !(interface.isBroadcastInterface || interface.isLoopbackInterface ||
                                   interface.isPointToPointInterface);
     interface.isPromiscuousInterface = infoMessage->ifi_flags & IFF_PROMISC;
+    interface.parentInterface = 0;
     memset(interface.interfaceName, 0, 21);
+
+    if(interface.isLoopbackInterface)
+      linkType = DNL_IFT_LOOPBACK;
+
+
 
     unsigned char* attributes = ((unsigned char*) header) + sizeof(nlmsghdr) + sizeof(ifinfomsg);
     struct attribute
@@ -98,9 +107,40 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
         int nameLength = a->length - 4;
         memcpy(interface.interfaceName, a->value, nameLength < 21 ? nameLength : 20);
       }
+      if(a->type == IFLA_LINK)
+      {
+        interface.parentInterface = *(unsigned int*)a->value;
+      }
+      if(a->type == IFLA_LINKINFO)
+      {
+        attribute* linkinfo = (attribute*) a;
+        attribute* b = (attribute*)a->value;
+
+        unsigned int count = 4;
+        while(count < linkinfo->length)
+        {
+          if (b->type == IFLA_INFO_KIND)
+          {
+            if (strncmp((char*) b->value, "vlan", b->length - 4) == 0)
+              linkType = DNL_IFT_DOT1Q;
+          }
+          if(b->type == IFLA_INFO_DATA)
+          {
+            if(linkType == DNL_IFT_DOT1Q)
+            {
+              interface.vlanData.vlanID = ((unsigned int*) b->value)[3];
+            }
+          }
+          count += ALIGN_TLV(b->length);
+          b = (attribute*) (((unsigned char*) b) + ALIGN_TLV(b->length));
+        }
+      }
+
+
       position += ALIGN_TLV(a->length);
       a = (attribute*) (((unsigned char*) a) + ALIGN_TLV(a->length));
     }
+    interface.interfaceType = linkType;
     if(interface.index > 0)
     {
       interfaces.push_back(interface);

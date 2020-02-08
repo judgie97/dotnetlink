@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
@@ -8,6 +9,7 @@ namespace dotnetlink
     public unsafe struct NetlinkInterface
     {
         public uint index;
+        public uint parentIndex;
         public fixed byte hardwareAddress[6];
         public fixed byte interfaceName[21];
         public byte isUp;
@@ -16,6 +18,53 @@ namespace dotnetlink
         public byte isPointToPointInterface;
         public byte isNBMAInterface;
         public byte isPromiscuousInterface;
+        public byte interfaceType;
+        public fixed byte interfaceInformation[4];
+
+        public NetlinkInterface(NetworkInterface networkInterface)
+        {
+            index = networkInterface.index;
+            parentIndex = networkInterface.parentInterfaceIndex;
+            
+            for (int i = 0; i < 6; i++)
+            {
+                hardwareAddress[i] = networkInterface.hardwareAddress.GetAddressBytes()[i];
+            }
+
+            for (int i = 0; i < networkInterface.interfaceName.Length && i < 20; i++)
+            {
+                interfaceName[i] = (byte)networkInterface.interfaceName[i];
+                interfaceName[i + 1] = 0;
+            }
+
+            isUp = networkInterface.isUp ? (byte)1 : (byte)0;
+            isBroadcastInterface = networkInterface.isBroadcastInterface ? (byte)1 : (byte)0;
+            isLoopbackInterface = networkInterface.isLoopbackInterface ? (byte)1 : (byte)0;
+            isPointToPointInterface = networkInterface.isPointToPointInterface ? (byte)1 : (byte)0;
+            isNBMAInterface = networkInterface.isNBMAInterface ? (byte)1 : (byte)0;
+            isPromiscuousInterface = networkInterface.isPromiscuousInterface ? (byte)1 : (byte)0;
+            interfaceType = (byte) networkInterface.interfaceType;
+
+            if (networkInterface.interfaceType == InterfaceType.PHYSICAL)
+            {
+            }
+            else if (networkInterface.interfaceType == InterfaceType.LOOPBACK)
+            {
+                
+            }
+            else if (networkInterface.interfaceType == InterfaceType.DOT1Q)
+            {
+                VLAN vlanInfo = (VLAN) networkInterface.interfaceInformation;
+                fixed (byte* b = interfaceInformation)
+                {
+                    *(uint*) b = vlanInfo.vlanID;
+                }
+            }
+            else
+            {
+                throw new InvalidEnumArgumentException("Unknown Interface Type");
+            }
+        }
 
         public NetworkInterface toNetworkInterface()
         {
@@ -40,15 +89,29 @@ namespace dotnetlink
                 name[i] = (char)interfaceName[i];
             }
 
-            return new NetworkInterface(index, new String(name), new PhysicalAddress(hwa), isUp > 0,
+            Object interfaceInformation = null;
+            
+            if (interfaceType == (byte) InterfaceType.DOT1Q)
+            {
+                VLAN vlan = new VLAN();
+                fixed (NetlinkInterface* nli = &this){
+                    vlan.vlanID = *(uint*) nli->interfaceInformation;
+                }
+
+                interfaceInformation = vlan;
+            }
+
+
+            return new NetworkInterface(index, parentIndex, new String(name), new PhysicalAddress(hwa), isUp > 0,
                 isBroadcastInterface > 0, isLoopbackInterface > 0, isPointToPointInterface > 0, isNBMAInterface > 0,
-                isPromiscuousInterface > 0);
+                isPromiscuousInterface > 0, (InterfaceType)interfaceType, interfaceInformation);
         }
     }
 
     public class NetworkInterface
     {
         public uint index;
+        public uint parentInterfaceIndex;
         public String interfaceName;
         public PhysicalAddress hardwareAddress;
         public bool isUp;
@@ -57,12 +120,15 @@ namespace dotnetlink
         public bool isPointToPointInterface;
         public bool isNBMAInterface;
         public bool isPromiscuousInterface;
+        public InterfaceType interfaceType;
+        public Object interfaceInformation;
 
-        public NetworkInterface(uint index, String interfaceName, PhysicalAddress hardwareAddress, bool isUp,
+        public NetworkInterface(uint index, uint parentInterfaceIndex, String interfaceName, PhysicalAddress hardwareAddress, bool isUp,
             bool isBroadcastInterface,
-            bool isLoopbackInterface, bool isPointToPointInterface, bool isNBMAInterface, bool isPromiscuousInterface)
+            bool isLoopbackInterface, bool isPointToPointInterface, bool isNBMAInterface, bool isPromiscuousInterface, InterfaceType interfaceType, Object interfaceInformation)
         {
             this.index = index;
+            this.parentInterfaceIndex = parentInterfaceIndex;
             this.interfaceName = interfaceName;
             this.hardwareAddress = hardwareAddress;
             this.isUp = isUp;
@@ -71,6 +137,8 @@ namespace dotnetlink
             this.isPointToPointInterface = isPointToPointInterface;
             this.isNBMAInterface = isNBMAInterface;
             this.isPromiscuousInterface = isPromiscuousInterface;
+            this.interfaceType = interfaceType;
+            this.interfaceInformation = interfaceInformation;
         }
     }
     

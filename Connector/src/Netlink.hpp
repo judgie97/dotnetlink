@@ -11,6 +11,8 @@
 #define NETLINK_DUMP_INTERUPTED -64
 #define NETLINK_ERROR -128
 #define TLV_BREACHES_MESSAGE_LENGTH -256
+#define CANNOT_CREATE_PHYSICAL_INTERFACE -512
+#define UNKNOWN_INTERFACE_TYPE -1024
 
 //Netlink protocols
 #define NETLINK_ROUTE 0
@@ -40,17 +42,30 @@ DNL_STRUCT IPAddress4
   unsigned char prefixLength;
 };
 
+#define DNL_IFT_PHYSICAL 0
+#define DNL_IFT_LOOPBACK 1
+#define DNL_IFT_DOT1Q 2
+
 DNL_STRUCT NetworkInterface
 {
   unsigned int index;
+  unsigned int parentInterface;
   unsigned char hardwareAddress[6];
-  unsigned char interfaceName[21];
+  char interfaceName[21];
   bool isUp;
   bool isBroadcastInterface;
   bool isLoopbackInterface;
   bool isPointToPointInterface;
   bool isNBMAInterface;
   bool isPromiscuousInterface;
+  unsigned char interfaceType;
+  union
+  {
+    struct
+    {
+      unsigned int vlanID;
+    } vlanData;
+  };
 };
 
 DNL_STRUCT FilterRule
@@ -86,9 +101,9 @@ DNL_API int openNetlinkSocket(unsigned int portID, int protocol);
 DNL_API int closeNetlinkSocket(int socket);
 
 //ROUTING
-DNL_API int requestAllRoutes(int sock, unsigned char** storage);
 DNL_API int addRoute(int sock, unsigned int portID, Route4* route);
 DNL_API int removeRoute(int sock, unsigned int portID, Route4* route);
+DNL_API int requestAllRoutes(int sock, unsigned char** storage);
 
 //ADDRESSING
 DNL_API int addIPAddress(int sock, unsigned int portID, IPAddress4* address);
@@ -96,10 +111,11 @@ DNL_API int removeIPAddress(int sock, unsigned int portID, IPAddress4* address);
 DNL_API int requestAllAddresses(int sock, unsigned char** storage);
 
 //NETWORK INTERFACES
-DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
+DNL_API int addInterface(int sock, unsigned int portID, NetworkInterface* interface);
 DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);
+DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
 
 //FILTER
-DNL_API int requestAllRules(int sockfd, unsigned int pid, unsigned char** storage);
 DNL_API unsigned int addNewRule(int sockfd, unsigned int pid, DotNetFilterRule* rule);
 DNL_API unsigned int deleteRule(int sockfd, unsigned int pid, unsigned int rule);
+DNL_API int requestAllRules(int sockfd, unsigned int pid, unsigned char** storage);

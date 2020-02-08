@@ -27,3 +27,28 @@ int addTLVToMessage(struct nlmsghdr* n, int maxLength, int type, const void* dat
 
   return 0;
 }
+
+int addTLVToMessage(struct nlmsghdr* n, int maxLength, int type, const void* data, int attributeLength, int printedLength)
+{
+  int len = RTA_LENGTH(attributeLength);
+  struct rtattr* rta;
+
+  int messageLength = NLMSG_ALIGN(n->nlmsg_len) + RTA_ALIGN(len);
+  if(messageLength > maxLength)
+  {
+    return TLV_BREACHES_MESSAGE_LENGTH;
+  }
+
+  rta = ((struct rtattr*) (((unsigned char*) (n)) + NLMSG_ALIGN((n)->nlmsg_len)));
+  rta->rta_type = type;
+  rta->rta_len = printedLength;
+
+  if(attributeLength)
+  {
+    memcpy(RTA_DATA(rta), data, attributeLength);
+  }
+
+  n->nlmsg_len = NLMSG_ALIGN(n->nlmsg_len) + RTA_ALIGN(len);
+
+  return 0;
+}
