@@ -8,11 +8,7 @@ int main(void)
 {
   int nfsock = openNetlinkSocket(getpid(), NETLINK_ROUTE);
 
-  NetworkInterface interface;
-
-  interface.interfaceType = DNL_IFT_DOT1Q;
-  interface.vlanData.vlanID = 100;
-  
+  removeInterface(nfsock, getpid(), 5);
 
   closeNetlinkSocket(nfsock);
 

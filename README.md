@@ -18,6 +18,8 @@ These tools are created and tested on version 5.4 of the linux kernel using .NET
 ### Interface management
 * Get link details
 * Set link to up or down
+* Add VLAN subinterface
+* Remove network interface
 
 ### Firewall management
 * Get the current filter rules

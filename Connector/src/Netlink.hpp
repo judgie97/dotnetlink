@@ -112,8 +112,9 @@ DNL_API int requestAllAddresses(int sock, unsigned char** storage);
 
 //NETWORK INTERFACES
 DNL_API int addInterface(int sock, unsigned int portID, NetworkInterface* interface);
-DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);
+DNL_API int removeInterface(int sock, unsigned int portID, unsigned int interfaceIndex);
 DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
+DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);
 
 //FILTER
 DNL_API unsigned int addNewRule(int sockfd, unsigned int pid, DotNetFilterRule* rule);

@@ -113,11 +113,10 @@ int receiveSomeNetworkInterfaces(int sock, std::vector<NetworkInterface> &interf
       }
       if(a->type == IFLA_LINKINFO)
       {
-        attribute* linkinfo = (attribute*) a;
         attribute* b = (attribute*)a->value;
 
         unsigned int count = 4;
-        while(count < linkinfo->length)
+        while(count < a->length)
         {
           if (b->type == IFLA_INFO_KIND)
           {
