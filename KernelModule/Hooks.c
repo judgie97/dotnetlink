@@ -17,7 +17,7 @@ void registerHooks(void)
 {
   netfilterInHook.hook = filterHook;
   netfilterInHook.pf = PF_INET;
-  netfilterInHook.hooknum = NF_INET_PRE_ROUTING;
+  netfilterInHook.hooknum = NF_INET_LOCAL_IN;
   netfilterInHook.priority = NF_IP_PRI_FIRST;
   nf_register_net_hook(&init_net, &netfilterInHook);
 
@@ -29,7 +29,7 @@ void registerHooks(void)
 
   netfilterOutHook.hook = filterHook;
   netfilterOutHook.pf = PF_INET;
-  netfilterOutHook.hooknum = NF_INET_POST_ROUTING;
+  netfilterOutHook.hooknum = NF_INET_LOCAL_OUT;
   netfilterOutHook.priority = NF_IP_PRI_FIRST;
   nf_register_net_hook(&init_net, &netfilterOutHook);
 }
