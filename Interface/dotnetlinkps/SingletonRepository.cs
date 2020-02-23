@@ -10,12 +10,5 @@ namespace dotnetlinkps
         {
             return _netlinkSocket ??= new NetlinkSocket();
         }
-
-        private static NetfilterSocket _netfilterSocket;
-
-        public static NetfilterSocket getNetfilterSocket()
-        {
-            return _netfilterSocket ??= new NetfilterSocket();
-        }
     }
 }

@@ -44,4 +44,4 @@ int addIPAddress(int sock, unsigned int portID, IPAddress4* address)
   flushSocket(sock);
 
   return 1;
-};
+}

@@ -16,12 +16,6 @@
 
 //Netlink protocols
 #define NETLINK_ROUTE 0
-#define NETLINK_DOTNETFILTER 25
-
-//DOTNETFILTER MESSAGE TYPES
-#define DNF_ADDRULE 150
-#define DNF_DELRULE 151
-#define DNF_GETRULE 152
 
 #define DNL_STRUCT struct __attribute__((__packed__))
 
@@ -115,8 +109,3 @@ DNL_API int addInterface(int sock, unsigned int portID, NetworkInterface* interf
 DNL_API int removeInterface(int sock, unsigned int portID, unsigned int interfaceIndex);
 DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
 DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);
-
-//FILTER
-DNL_API unsigned int addNewRule(int sockfd, unsigned int pid, DotNetFilterRule* rule);
-DNL_API unsigned int deleteRule(int sockfd, unsigned int pid, unsigned int rule);
-DNL_API int requestAllRules(int sockfd, unsigned int pid, unsigned char** storage);

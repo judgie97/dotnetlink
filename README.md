@@ -1,5 +1,5 @@
 # dotnetlink
-Linux network interface and firewall management tools with .NET Core and PowerShell interfaces
+Linux network interface management tools with .NET Core and PowerShell interfaces
 
 ## Compatibility
 These tools are created and tested on version 5.4 of the linux kernel using .NET Core 3.1 and PowerShell Core 7.0
@@ -20,8 +20,3 @@ These tools are created and tested on version 5.4 of the linux kernel using .NET
 * Set link to up or down
 * Add VLAN subinterface
 * Remove network interface
-
-### Firewall management
-* Get the current filter rules
-* Add new filter rules
-* Remove filter rules 
