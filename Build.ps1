@@ -71,7 +71,7 @@ param(
     Copy-Item -Path "$OutputLocation/Interface/dotnetlinkps.dll" -Destination "dotnetlinkps.dll"
     Copy-Item -Path "$OutputLocation/Interface/dotnetlink.dll" -Destination "dotnetlink.dll"
     Copy-Item -Path "$OutputLocation/Interface/libdotnetlinkconnector.so" -Destination "libdotnetlinkconnector.so"
-    New-ModuleManifest -Author "Judgie97" -CmdletsToExport (Get-Content "$InterfaceLocation/dotnetlinkps/ExportedFunctions.txt") -Path "dotnetlinkps.psd1" -RootModule "dotnetlinkps.dll" -Copyright "Released under MIT license" 
+    New-ModuleManifest -Author "Ellis Judge" -CmdletsToExport (Get-Content "$InterfaceLocation/dotnetlinkps/ExportedFunctions.txt") -Path "dotnetlinkps.psd1" -RootModule "dotnetlinkps.dll" -Copyright "Released under MIT license" 
 
     ### Create a package for dotnet inclusion
     Remove-Item "$OutputLocation/Interface/dotnetlinkps.dll"
