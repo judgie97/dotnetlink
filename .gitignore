@@ -8,6 +8,8 @@
 bin
 debug
 obj
+Build
+cmake-build-release
 cmake-build-debug
 
 #allow c# files
@@ -28,3 +30,9 @@ cmake-build-debug
 #allow the readme and gitignore
 !*.md
 !.gitignore
+
+#allow PowerShell
+!*ps1
+
+#allow the Functions list
+!ExportedFunctions.txt
