@@ -20,3 +20,14 @@ These tools are created and tested on version 5.4 of the linux kernel using .NET
 * Set link to up or down
 * Add VLAN subinterface
 * Remove network interface
+
+## Build
+
+From the root directory of the repository in a PowerShell terminal
+
+```
+. Build.ps1
+Build-DotNetLink
+```
+
+This will create a "Build" folder with the PowerShell module and the .NET interface 
