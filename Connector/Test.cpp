@@ -1,16 +1,19 @@
-#include "Test.hpp"
 #include <iostream>
-#include <unistd.h>
-#include <cstring>
 #include <arpa/inet.h>
+#include <netlink/errno.h>
+#include <linux/rtnetlink.h>
+#include <cstring>
+#include "src/Netlink.hpp"
+#include "Test.hpp"
 
 int main(void)
 {
-  int nfsock = openNetlinkSocket(getpid(), NETLINK_ROUTE);
+  struct nl_sock* socket = openNetlinkSocket();
 
-  removeInterface(nfsock, getpid(), 5);
+  unsigned char* data;
 
-  closeNetlinkSocket(nfsock);
+  setNetworkInterface(socket, 2, true);
 
+  closeNetlinkSocket(socket);
   return 0;
 }

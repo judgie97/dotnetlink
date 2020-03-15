@@ -4,65 +4,28 @@ using System.Runtime.InteropServices;
 
 namespace dotnetlink
 {
-    public class NetlinkSocket
+    public unsafe class NetlinkSocket
     {
-        private static int NETLINK_ROUTE = 0;
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern int openNetlinkSocket(uint portID, int protocol);
+        private void* m_sockfd;
 
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int requestAllRoutes(int sock, byte** storage);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern int closeNetlinkSocket(int sock);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int addRoute(int sock, uint portID, NetlinkRoute4* route);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int removeRoute(int sock, uint portID, NetlinkRoute4* route);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int addIPAddress(int sock, uint portID, NetlinkIPAddress4* address);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int removeIPAddress(int sock, uint portID, NetlinkIPAddress4* address);
-
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int requestAllAddresses(int sock, byte** storage);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int requestAllNetworkInterfaces(int sock, byte** storage);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int setNetworkInterface(int sock, uint portID, uint interfaceIndex, bool up);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int addInterface(int sock, uint portID, NetlinkInterface* nic);
-        
-        [DllImport("libdotnetlinkconnector.so")]
-        private static extern unsafe int removeInterface(int sock, uint portID, uint interfaceIndex);
-
-
-        
-        private int m_sockfd;
-        private uint m_pid;
         public NetlinkSocket()
         {
-            m_pid = (uint)Process.GetCurrentProcess().Id;
-            m_sockfd = openNetlinkSocket(m_pid, NETLINK_ROUTE);
+            m_sockfd = Connector.openNetlinkSocket();
         }
 
         ~NetlinkSocket()
         {
-            closeNetlinkSocket(m_sockfd);
+            Connector.closeNetlinkSocket(m_sockfd);
         }
         
-        public unsafe Route4[] getRoutingTable()
+        public Route4[] getRoutingTable()
         {
             byte* netlinkRoutes;
-            int count = requestAllRoutes(m_sockfd, &netlinkRoutes);
+            int count = Connector.requestAllRoutes(m_sockfd, &netlinkRoutes);
+            if (count < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)count);
+            }
             byte* currentRoute = netlinkRoutes;
             Route4[] routes = new Route4[count];
             for (int i = 0; i < count; i++)
@@ -74,7 +37,7 @@ namespace dotnetlink
             return routes;
         }
         
-        public unsafe void addRoute(Route4 route)
+        public void addRoute(Route4 route)
         {
             NetlinkRoute4 nlr = new NetlinkRoute4();
             nlr.destination = Util.ip4touint(route.destination);
@@ -83,10 +46,14 @@ namespace dotnetlink
             nlr.nic = 0;
             nlr.protocol = (byte)route.protocol;
 
-            addRoute(m_sockfd, m_pid, &nlr);
+            int r = Connector.addRoute(m_sockfd, &nlr);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
         
-        public unsafe void removeRoute(Route4 route)
+        public void removeRoute(Route4 route)
         {
             NetlinkRoute4 nlr = new NetlinkRoute4();
             nlr.destination = Util.ip4touint(route.destination);
@@ -95,33 +62,49 @@ namespace dotnetlink
             nlr.protocol = (byte) RoutingProtocol.Unspecified;
             nlr.nic = 0;
 
-            removeRoute(m_sockfd, m_pid, &nlr);
+            int r = Connector.removeRoute(m_sockfd, &nlr);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
 
-        public unsafe void addIPAddress(IPAddress4 address)
+        public void addIPAddress(IPAddress4 address)
         {
             NetlinkIPAddress4 ip4 = new NetlinkIPAddress4();
             ip4.address = Util.ip4touint(address.address);
             ip4.netmask = address.netmask;
             ip4.nic = address.nic;
 
-            addIPAddress(m_sockfd, m_pid, &ip4);
+            int r = Connector.addIPAddress(m_sockfd, &ip4);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
         
-        public unsafe void removeIPAddress(IPAddress4 address)
+        public void removeIPAddress(IPAddress4 address)
         {
             NetlinkIPAddress4 ip4 = new NetlinkIPAddress4();
             ip4.address = Util.ip4touint(address.address);
             ip4.netmask = address.netmask;
             ip4.nic = address.nic;
 
-            removeIPAddress(m_sockfd, m_pid, &ip4);
+            int r = Connector.removeIPAddress(m_sockfd, &ip4);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
         
-        public unsafe IPAddress4[] getAddresses()
+        public IPAddress4[] getAddresses()
         {
             byte* netlinkAddresses;
-            int count = requestAllAddresses(m_sockfd, &netlinkAddresses);
+            int count = Connector.requestAllAddresses(m_sockfd, &netlinkAddresses);
+            if (count < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)count);
+            }
             byte* currentAddress = netlinkAddresses;
             IPAddress4[] addresses = new IPAddress4[count];
             for (int i = 0; i < count; i++)
@@ -133,10 +116,14 @@ namespace dotnetlink
             return addresses;
         }
         
-        public unsafe NetworkInterface[] getNetworkInterfaces()
+        public NetworkInterface[] getNetworkInterfaces()
         {
             byte* netlinkInterfaces;
-            int count = requestAllNetworkInterfaces(m_sockfd, &netlinkInterfaces);
+            int count = Connector.requestAllNetworkInterfaces(m_sockfd, &netlinkInterfaces);
+            if (count < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)count);
+            }
             byte* currentInterface = netlinkInterfaces;
             NetworkInterface[] interfaces = new NetworkInterface[count];
             for (int i = 0; i < count; i++)
@@ -148,21 +135,33 @@ namespace dotnetlink
             return interfaces;
         }
         
-        public unsafe void setNetworkInterface(NetworkInterface networkInterface, bool up)
+        public void setNetworkInterface(NetworkInterface networkInterface, bool up)
         {
-            setNetworkInterface(m_sockfd, m_pid, networkInterface.index, up);
+            int r = Connector.setNetworkInterface(m_sockfd, networkInterface.index, up);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
         
-        public unsafe void addNetworkInterface(NetworkInterface networkInterface)
+        public void addNetworkInterface(NetworkInterface networkInterface)
         {
             NetlinkInterface netlinkInterface = new NetlinkInterface(networkInterface);
             
-            addInterface(m_sockfd, m_pid, &netlinkInterface);
+            int r = Connector.addInterface(m_sockfd, &netlinkInterface);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
         
-        public unsafe void removeNetworkInterface(NetworkInterface networkInterface)
+        public void removeNetworkInterface(NetworkInterface networkInterface)
         {
-            removeInterface(m_sockfd, m_pid, networkInterface.index);
+            int r = Connector.removeInterface(m_sockfd, networkInterface.index);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
         }
     }
 }

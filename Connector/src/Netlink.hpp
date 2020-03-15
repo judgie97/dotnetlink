@@ -3,20 +3,6 @@
 //Prevent function names being mangled in shared objects
 #define DNL_API extern "C"
 
-//ERROR CODES
-#define COULD_NOT_OPEN_NETLINK_SOCKET -4
-#define COULD_NOT_BIND_SOCKET_TO_NETLINK -8
-#define UNABLE_TO_RECEIVE_FROM_NETLINK -16
-#define NO_DATA_ON_NETLINK_SOCKET -32
-#define NETLINK_DUMP_INTERUPTED -64
-#define NETLINK_ERROR -128
-#define TLV_BREACHES_MESSAGE_LENGTH -256
-#define CANNOT_CREATE_PHYSICAL_INTERFACE -512
-#define UNKNOWN_INTERFACE_TYPE -1024
-
-//Netlink protocols
-#define NETLINK_ROUTE 0
-
 #define DNL_STRUCT struct __attribute__((__packed__))
 
 //TYPES
@@ -90,22 +76,25 @@ DNL_STRUCT DotNetFilterRule
   unsigned int next;
 };
 
+struct nl_sock;
 //EXPORTED FUNCTIONS
-DNL_API int openNetlinkSocket(unsigned int portID, int protocol);
-DNL_API int closeNetlinkSocket(int socket);
+
+//SOCKET MANAGEMENT
+DNL_API struct nl_sock* openNetlinkSocket();
+DNL_API void closeNetlinkSocket(struct nl_sock* socket);
 
 //ROUTING
-DNL_API int addRoute(int sock, unsigned int portID, Route4* route);
-DNL_API int removeRoute(int sock, unsigned int portID, Route4* route);
-DNL_API int requestAllRoutes(int sock, unsigned char** storage);
+DNL_API int addRoute(struct nl_sock* socket, Route4* route);
+DNL_API int removeRoute(struct nl_sock* socket, Route4* route);
+DNL_API int requestAllRoutes(struct nl_sock* socket, unsigned char** storage);
 
 //ADDRESSING
-DNL_API int addIPAddress(int sock, unsigned int portID, IPAddress4* address);
-DNL_API int removeIPAddress(int sock, unsigned int portID, IPAddress4* address);
-DNL_API int requestAllAddresses(int sock, unsigned char** storage);
+DNL_API int addIPAddress(struct nl_sock* socket, IPAddress4* address);
+DNL_API int removeIPAddress(struct nl_sock* socket, IPAddress4* address);
+DNL_API int requestAllAddresses(struct nl_sock* socket, unsigned char** storage);
 
 //NETWORK INTERFACES
-DNL_API int addInterface(int sock, unsigned int portID, NetworkInterface* interface);
-DNL_API int removeInterface(int sock, unsigned int portID, unsigned int interfaceIndex);
-DNL_API int requestAllNetworkInterfaces(int sock, unsigned char** storage);
-DNL_API int setNetworkInterface(int sock, unsigned int portID, unsigned int interfaceIndex, bool up);
+DNL_API int addInterface(struct nl_sock* socket, NetworkInterface* interface);
+DNL_API int removeInterface(struct nl_sock* socket, NetworkInterface* interface);
+DNL_API int requestAllNetworkInterfaces(struct nl_sock* socket, unsigned char** storage);
+DNL_API int setNetworkInterface(struct nl_sock* socket, unsigned int interfaceIndex, bool up);
