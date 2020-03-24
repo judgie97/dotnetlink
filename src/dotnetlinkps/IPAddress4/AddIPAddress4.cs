@@ -15,7 +15,7 @@ namespace dotnetlinkps
 
             [Parameter] public byte netmask;
 
-            [Parameter] public uint nic;
+            [Parameter] public int nic;
 
             protected override void BeginProcessing()
             {

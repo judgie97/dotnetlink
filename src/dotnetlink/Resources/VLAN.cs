@@ -2,14 +2,14 @@ namespace dotnetlink
 {
     public class VLAN
     {
-        public uint vlanID;
+        public ushort vlanID;
 
         public VLAN()
         {
             vlanID = 0;
         }
 
-        public VLAN(uint vlanID)
+        public VLAN(ushort vlanID)
         {
             this.vlanID = vlanID;
         }

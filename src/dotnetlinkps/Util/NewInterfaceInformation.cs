@@ -8,7 +8,7 @@ namespace dotnetlinkps.Util
     public class NewInterfaceInformation : PSCmdlet
     {
         [Parameter(Position = 0)] public InterfaceType type;
-        [Parameter(Position = 1)] public uint vlanID;
+        [Parameter(Position = 1)] public ushort vlanID;
         
         protected override void BeginProcessing()
         {

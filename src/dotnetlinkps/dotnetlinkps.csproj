@@ -9,8 +9,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="System.Management.Automation">
-        <HintPath>\opt\microsoft\powershell\7\System.Management.Automation.dll</HintPath>
+      <Reference Include="System.Management.Automation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+        <HintPath>/opt/microsoft/powershell/7.0.0/System.Management.Automation.dll</HintPath>
       </Reference>
     </ItemGroup>
 
