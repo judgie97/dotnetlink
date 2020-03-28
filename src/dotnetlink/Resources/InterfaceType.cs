@@ -4,6 +4,7 @@ namespace dotnetlink
     {
         PHYSICAL,
         LOOPBACK,
-        DOT1Q
+        DOT1Q,
+        BRIDGE
     }
 }

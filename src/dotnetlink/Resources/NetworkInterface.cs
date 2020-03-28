@@ -68,6 +68,12 @@ namespace dotnetlink
             isNBMAInterface = !(isBroadcastInterface || isLoopbackInterface || isPointToPointInterface);
             isPromiscuousInterface = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 8) != 0;
             interfaceType = InterfaceType.PHYSICAL;
+            
+            if(Util.nativeToManagedString((sbyte*)LibNLRoute3.rtnl_link_get_type(link)).Equals("bridge"))
+            {
+                interfaceType = InterfaceType.BRIDGE;
+            }
+
             if (isLoopbackInterface)
             {
                 interfaceType = InterfaceType.LOOPBACK;
