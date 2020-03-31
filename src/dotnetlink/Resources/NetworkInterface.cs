@@ -57,7 +57,7 @@ namespace dotnetlink
             byte[] macBytes = new byte[6];
             for (int i = 0; i < 6; i++)
             {
-                macBytes[i] = mac[6];
+                macBytes[i] = mac[i];
             }
             hardwareAddress = new PhysicalAddress(macBytes);
             
