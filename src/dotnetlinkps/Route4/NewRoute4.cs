@@ -1,6 +1,7 @@
 using System.Management.Automation;
 using System.Net;
 using dotnetlink;
+using libnl;
 
 namespace dotnetlinkps
 {
@@ -28,7 +29,7 @@ namespace dotnetlinkps
 
         protected override void EndProcessing()
         {
-            WriteObject(new Route4(destination, netmask, gateway, 0, (RoutingProtocol) 4, 254));
+            WriteObject(new Route4(destination, netmask, gateway, 0, (RoutingProtocol) 4, RoutingTable.RT_TABLE_MAIN));
         }
 
         protected override void StopProcessing()

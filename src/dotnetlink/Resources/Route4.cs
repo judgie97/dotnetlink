@@ -11,10 +11,10 @@ namespace dotnetlink
         public byte netmask;
         public int nic;
         public RoutingProtocol protocol;
-        public uint routingTable;
-        public byte scope;
+        public RoutingTable routingTable;
+        public RouteScope scope;
         
-        public Route4(IPAddress destination, byte netmask, IPAddress gateway, int nic, RoutingProtocol protocol, uint routingTable)
+        public Route4(IPAddress destination, byte netmask, IPAddress gateway, int nic, RoutingProtocol protocol, RoutingTable routingTable)
         {
             this.destination = destination;
             this.netmask = netmask;
@@ -47,8 +47,8 @@ namespace dotnetlink
             }
             protocol = (RoutingProtocol) LibNLRoute3.rtnl_route_get_protocol(route);
 
-            routingTable = LibNLRoute3.rtnl_route_get_table(route);
-            scope = LibNLRoute3.rtnl_route_get_scope(route);
+            routingTable = (RoutingTable)LibNLRoute3.rtnl_route_get_table(route);
+            scope = (RouteScope)LibNLRoute3.rtnl_route_get_scope(route);
         }
     }
 }
