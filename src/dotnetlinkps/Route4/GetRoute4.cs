@@ -16,7 +16,7 @@ namespace dotnetlinkps
             get { return routingTable; }
             set { routingTable = value; }
         }
-        private RoutingTable routingTable = RoutingTable.RT_TABLE_MAIN;
+        private RoutingTable routingTable = RoutingTable.MAIN;
         
         [Parameter(Mandatory = false)]
         public RouteScope RouteScope

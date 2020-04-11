@@ -29,7 +29,7 @@ namespace dotnetlinkps
 
         protected override void EndProcessing()
         {
-            WriteObject(new Route4(destination, netmask, gateway, 0, (RoutingProtocol) 4, RoutingTable.RT_TABLE_MAIN));
+            WriteObject(new Route4(destination, netmask, gateway, 0, RoutingProtocol.STATIC, RoutingTable.MAIN));
         }
 
         protected override void StopProcessing()
