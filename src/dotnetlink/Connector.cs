@@ -10,12 +10,12 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_set_table(route, (uint)RoutingTable.MAIN);
 
             uint dest = Util.ip4touint(route4.destination);
-            nl_addr* nlDestination = LibNL3.nl_addr_build(2, &dest, 4);
+            nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
             LibNL3.nl_addr_set_prefixlen(nlDestination, route4.netmask);
             LibNLRoute3.rtnl_route_set_dst(route, nlDestination);
 
             uint gateway = Util.ip4touint(route4.gateway);
-            nl_addr* nlGateway = LibNL3.nl_addr_build(2, &gateway, 4);
+            nl_addr* nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, &gateway, 4);
             LibNL3.nl_addr_set_prefixlen(nlGateway, 32);
 
             rtnl_nexthop* rtnlNexthop = LibNLRoute3.rtnl_route_nh_alloc();
@@ -31,15 +31,15 @@ namespace dotnetlink
         public static int removeRoute(nl_sock* socket, Route4 route4)
         {
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
-            LibNLRoute3.rtnl_route_set_table(nlRoute, 254);
+            LibNLRoute3.rtnl_route_set_table(nlRoute, (uint)RoutingTable.MAIN);
 
             uint dest = Util.ip4touint(route4.destination);
-            nl_addr* nlDestination = LibNL3.nl_addr_build(2, &dest, 4);
+            nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
             LibNL3.nl_addr_set_prefixlen(nlDestination, route4.netmask);
             LibNLRoute3.rtnl_route_set_dst(nlRoute, nlDestination);
 
             uint gateway = Util.ip4touint(route4.gateway);
-            nl_addr* nlGateway = LibNL3.nl_addr_build(2, &gateway, 4);
+            nl_addr* nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, &gateway, 4);
             LibNL3.nl_addr_set_prefixlen(nlGateway, 32);
 
             rtnl_nexthop* rtnlNexthop = LibNLRoute3.rtnl_route_nh_alloc();
@@ -59,7 +59,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_addr_set_scope(addr, 0);
 
             uint address = Util.ip4touint(ipAddress4.address);
-            nl_addr* nlAddr = LibNL3.nl_addr_build(2, &address, 4);
+            nl_addr* nlAddr = LibNL3.nl_addr_build(AddressFamily.INET, &address, 4);
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.nic);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
 
@@ -73,7 +73,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_addr_set_scope(addr, 0);
 
             uint address = Util.ip4touint(ipAddress4.address);
-            nl_addr* nlAddr = LibNL3.nl_addr_build(2, &address, 4);
+            nl_addr* nlAddr = LibNL3.nl_addr_build(AddressFamily.INET, &address, 4);
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.netmask);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
 
@@ -128,7 +128,7 @@ namespace dotnetlink
         public static int setNetworkInterface(nl_sock* socket, int networkInterfaceIndex, bool up)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, 2, &cache);
+            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, networkInterfaceIndex);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
@@ -147,7 +147,7 @@ namespace dotnetlink
         public static Route4[] requestAllRoutes(nl_sock* socket)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_route_alloc_cache(socket, 2, 0, &cache);
+            LibNLRoute3.rtnl_route_alloc_cache(socket, AddressFamily.INET, 0, &cache);
             //Check that the number of items is not 0
             int count = LibNL3.nl_cache_nitems(cache);
             if (count == 0)
@@ -189,7 +189,7 @@ namespace dotnetlink
         public static NetworkInterface[] requestAllNetworkInterfaces(nl_sock* socket)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, 2, &cache);
+            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
             //Check that the number of items is not 0
             int count = LibNL3.nl_cache_nitems(cache);
             if (count == 0)
