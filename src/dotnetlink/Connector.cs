@@ -1,3 +1,4 @@
+using System.Linq;
 using libnl;
 
 namespace dotnetlink
@@ -183,7 +184,7 @@ namespace dotnetlink
                 current = LibNL3.nl_cache_get_next(current);
             }
 
-            return addresses;
+            return addresses.Where(a => a.address.GetAddressBytes().Length == 4).ToArray();
         }
         
         public static NetworkInterface[] requestAllNetworkInterfaces(nl_sock* socket)

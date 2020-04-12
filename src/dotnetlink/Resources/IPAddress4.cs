@@ -24,7 +24,14 @@ namespace dotnetlink
         public unsafe IPAddress4(rtnl_addr* address)
         {
             nl_addr* addr = LibNLRoute3.rtnl_addr_get_local(address);
-            this.address = new IPAddress(*(uint*)LibNL3.nl_addr_get_binary_addr(addr));
+            uint addressLength = LibNL3.nl_addr_get_len(addr);
+
+            byte[] bytes = new byte[addressLength];
+            for (uint i = 0; i < addressLength; i++)
+            {
+                bytes[i] = ((byte*)LibNL3.nl_addr_get_binary_addr(addr))[i];
+            }
+            this.address = new IPAddress(bytes);
             this.netmask = (byte) LibNL3.nl_addr_get_prefixlen(addr);
             this.nic = LibNLRoute3.rtnl_addr_get_ifindex(address);
         }
