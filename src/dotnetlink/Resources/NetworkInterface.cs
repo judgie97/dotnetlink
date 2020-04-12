@@ -61,12 +61,12 @@ namespace dotnetlink
             }
             hardwareAddress = new PhysicalAddress(macBytes);
             
-            isUp = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 0) == 0;
-            isBroadcastInterface = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 1) != 0;
-            isLoopbackInterface = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 3) != 0;
-            isPointToPointInterface = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 4) != 0;
+            isUp = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.UP) == 0;
+            isBroadcastInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.BROADCAST) != 0;
+            isLoopbackInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.LOOPBACK) != 0;
+            isPointToPointInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.POINTOPOINT) != 0;
             isNBMAInterface = !(isBroadcastInterface || isLoopbackInterface || isPointToPointInterface);
-            isPromiscuousInterface = (LibNLRoute3.rtnl_link_get_flags(link) & 1 << 8) != 0;
+            isPromiscuousInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.PROMISC) != 0;
             interfaceType = InterfaceType.PHYSICAL;
             
             if(Util.nativeToManagedString((sbyte*)LibNLRoute3.rtnl_link_get_type(link)).Equals("bridge"))
