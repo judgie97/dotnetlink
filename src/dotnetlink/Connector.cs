@@ -7,7 +7,7 @@ namespace dotnetlink
         public static int addRoute(nl_sock* socket, Route4 route4)
         {
             rtnl_route* route = LibNLRoute3.rtnl_route_alloc();
-            LibNLRoute3.rtnl_route_set_table(route, 254);
+            LibNLRoute3.rtnl_route_set_table(route, (uint)RoutingTable.MAIN);
 
             uint dest = Util.ip4touint(route4.destination);
             nl_addr* nlDestination = LibNL3.nl_addr_build(2, &dest, 4);
@@ -25,7 +25,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_set_protocol(route, (byte) route4.protocol);
             LibNLRoute3.rtnl_route_set_iif(route, route4.nic);
 
-            return LibNLRoute3.rtnl_route_add(socket, route, 0x01 | 0x400);
+            return LibNLRoute3.rtnl_route_add(socket, route, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
 
         public static int removeRoute(nl_sock* socket, Route4 route4)
@@ -49,7 +49,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_set_protocol(nlRoute, (byte) route4.protocol);
             LibNLRoute3.rtnl_route_set_iif(nlRoute, route4.nic);
 
-            return LibNLRoute3.rtnl_route_delete(socket, nlRoute, 0x1);
+            return LibNLRoute3.rtnl_route_delete(socket, nlRoute, NLMessageFlag.REQUEST);
         }
 
         public static int addIPAddress(nl_sock* socket, IPAddress4 ipAddress4)
@@ -63,7 +63,7 @@ namespace dotnetlink
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.nic);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
 
-            return LibNLRoute3.rtnl_addr_add(socket, addr, 0x1 | 0x400);
+            return LibNLRoute3.rtnl_addr_add(socket, addr, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
 
         public static int removeIPAddress(nl_sock* socket, IPAddress4 ipAddress4)
@@ -77,7 +77,7 @@ namespace dotnetlink
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.netmask);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
 
-            return LibNLRoute3.rtnl_addr_delete(socket, addr, 0x1 | 0x400);
+            return LibNLRoute3.rtnl_addr_delete(socket, addr, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
 
         public static int addInterface(nl_sock* socket, NetworkInterface networkInterface)
@@ -99,7 +99,7 @@ namespace dotnetlink
                 }
             }
 
-            return LibNLRoute3.rtnl_link_add(socket, nlLink, 0x1 | 0x400);
+            return LibNLRoute3.rtnl_link_add(socket, nlLink, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
         
         public static int removeInterface(nl_sock* socket, NetworkInterface networkInterface)
@@ -134,14 +134,14 @@ namespace dotnetlink
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
             if (up)
             {
-                LibNLRoute3.rtnl_link_set_flags(changed, 0x1);
+                LibNLRoute3.rtnl_link_set_flags(changed, NLMessageFlag.REQUEST);
             }
             else
             {
-                LibNLRoute3.rtnl_link_unset_flags(changed, 0x1);
+                LibNLRoute3.rtnl_link_unset_flags(changed, NLMessageFlag.REQUEST);
             }
 
-            return LibNLRoute3.rtnl_link_change(socket, original, changed, 0x1);
+            return LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
         }
 
         public static Route4[] requestAllRoutes(nl_sock* socket)
