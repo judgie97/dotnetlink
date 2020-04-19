@@ -9,13 +9,13 @@ namespace dotnetlinkps
     public class NewRoute4 : PSCmdlet
     {
         [Parameter]
-        public IPAddress destination;
+        public IPAddress Destination;
         
         [Parameter]
-        public IPAddress gateway;
+        public IPAddress Gateway;
         
         [Parameter]
-        public byte netmask;
+        public byte Netmask;
 
         protected override void BeginProcessing()
         {
@@ -29,7 +29,7 @@ namespace dotnetlinkps
 
         protected override void EndProcessing()
         {
-            WriteObject(new Route4(destination, netmask, gateway, 0, RoutingProtocol.STATIC, RoutingTable.MAIN));
+            WriteObject(new Route4(new Subnet(Destination, Netmask), Gateway, 0, RoutingProtocol.STATIC, RoutingTable.MAIN));
         }
 
         protected override void StopProcessing()

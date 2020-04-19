@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 
 namespace dotnetlink
@@ -5,17 +6,27 @@ namespace dotnetlink
     public class Subnet
     {
         public IPAddress NetworkAddress;
-        public uint netmask;
+        public uint Netmask;
 
-        public Subnet(IPAddress ipAddress, uint netmask)
+        public Subnet(IPAddress networkAddress, uint netmask)
         {
-            this.NetworkAddress = ipAddress;
-            this.netmask = netmask;
+            NetworkAddress = networkAddress;
+            Netmask = netmask;
+        }
+
+        public Subnet(IPAddress networkAddress, byte CIDR)
+        {
+            NetworkAddress = networkAddress;
+            Netmask = 0;
+            for (byte i = 0; i < CIDR; i++)
+            {
+                Netmask |= (uint) 1 << i;
+            }
         }
 
         private bool NetmaskBitValue(int bit)
         {
-            return (netmask & 1u << bit) != 0;
+            return (Netmask & 1u << bit) != 0;
         }
 
         public int NetmaskCIDR()

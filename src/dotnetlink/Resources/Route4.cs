@@ -6,18 +6,16 @@ namespace dotnetlink
 {
     public class Route4
     {
-        public IPAddress destination;
         public IPAddress gateway;
-        public byte netmask;
+        public Subnet destination;
         public int nic;
         public RoutingProtocol protocol;
         public RoutingTable routingTable;
         public RouteScope scope;
         
-        public Route4(IPAddress destination, byte netmask, IPAddress gateway, int nic, RoutingProtocol protocol, RoutingTable routingTable)
+        public Route4(Subnet destination, IPAddress gateway, int nic, RoutingProtocol protocol, RoutingTable routingTable)
         {
             this.destination = destination;
-            this.netmask = netmask;
             this.gateway = gateway;
             this.nic = nic;
             this.protocol = protocol;
@@ -31,9 +29,10 @@ namespace dotnetlink
         public unsafe Route4(rtnl_route* route)
         {
             nl_addr* destinationAddress = LibNLRoute3.rtnl_route_get_dst(route);
-            netmask = (byte)LibNL3.nl_addr_get_prefixlen(destinationAddress);
+            byte netmask = (byte)LibNL3.nl_addr_get_prefixlen(destinationAddress);
             uint destinationIPAddress = *(uint*)LibNL3.nl_addr_get_binary_addr(destinationAddress);
-            destination = new IPAddress(destinationIPAddress);
+            IPAddress destinationNetwork = new IPAddress(destinationIPAddress);
+            destination = new Subnet(destinationNetwork, netmask);
             
             
             rtnl_nexthop* gatewayHop = LibNLRoute3.rtnl_route_nexthop_n(route, 0);

@@ -10,9 +10,9 @@ namespace dotnetlink
             rtnl_route* route = LibNLRoute3.rtnl_route_alloc();
             LibNLRoute3.rtnl_route_set_table(route, (uint)RoutingTable.MAIN);
 
-            uint dest = Util.ip4touint(route4.destination);
+            uint dest = Util.ip4touint(route4.destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
-            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.netmask);
+            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.destination.NetmaskCIDR());
             LibNLRoute3.rtnl_route_set_dst(route, nlDestination);
 
             uint gateway = Util.ip4touint(route4.gateway);
@@ -34,9 +34,9 @@ namespace dotnetlink
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
             LibNLRoute3.rtnl_route_set_table(nlRoute, (uint)RoutingTable.MAIN);
 
-            uint dest = Util.ip4touint(route4.destination);
+            uint dest = Util.ip4touint(route4.destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
-            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.netmask);
+            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.destination.NetmaskCIDR());
             LibNLRoute3.rtnl_route_set_dst(nlRoute, nlDestination);
 
             uint gateway = Util.ip4touint(route4.gateway);
