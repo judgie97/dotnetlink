@@ -28,7 +28,9 @@ param(
 
         Copy-Item -Path "$InterfaceLocation/dotnetlinkps/bin/Debug/netcoreapp3.1/dotnetlinkps.dll" -Destination "$OutputLocation/Interface/dotnetlinkps.dll"
         Copy-Item -Path "$InterfaceLocation/dotnetlinkps/bin/Debug/netcoreapp3.1/dotnetlink.dll" -Destination "$OutputLocation/Interface/dotnetlink.dll"
-		Copy-Item -Path "$InterfaceLocation/dotnetlinkps/bin/Debug/netcoreapp3.1/libnl.dll" -Destination "$OutputLocation/Interface/libnl.dll"
+        Copy-Item -Path "$InterfaceLocation/dotnetlinkps/bin/Debug/netcoreapp3.1/dotnettables.dll" -Destination "$OutputLocation/Interface/dotnettables.dll"
+        Copy-Item -Path "$InterfaceLocation/dotnetlinkps/bin/Debug/netcoreapp3.1/libnl.dll" -Destination "$OutputLocation/Interface/libnl.dll"
+		Copy-Item -Path "~/.nuget/packages/newtonsoft.json.schema/3.0.13/lib/net45/Newtonsoft.Json.Schema.dll" -Destination "$OutputLocation/Interface/Newtonsoft.Json.Schema.dll"
     }
     else
     {
@@ -45,8 +47,11 @@ param(
     Set-Location "$OutputLocation/PowerShell"
     Copy-Item -Path "$OutputLocation/Interface/dotnetlinkps.dll" -Destination "dotnetlinkps.dll"
     Copy-Item -Path "$OutputLocation/Interface/dotnetlink.dll" -Destination "dotnetlink.dll"
+    Copy-Item -Path "$OutputLocation/Interface/dotnettables.dll" -Destination "dotnettables.dll"
     Copy-Item -Path "$OutputLocation/Interface/libnl.dll" -Destination "libnl.dll"
-    New-ModuleManifest -Author "Ellis Judge" -CmdletsToExport (Get-Content "$InterfaceLocation/dotnetlinkps/ExportedFunctions.txt") -Path "dotnetlinkps.psd1" -RootModule "dotnetlinkps.dll" -Copyright "Released under MIT license" 
+    Copy-Item -Path "$OutputLocation/Interface/Newtonsoft.Json.Schema.dll" -Destination "Newtonsoft.Json.Schema.dll"
+    $commands = (Get-Content "$InterfaceLocation/dotnetlinkps/ExportedFunctions.txt") | Where-Object{ -not $_ -like "#*"}
+    New-ModuleManifest -Author "Ellis Judge" -CmdletsToExport $commands -Path "dotnetlinkps.psd1" -RootModule "dotnetlinkps.dll" -Copyright "Released under MIT license" 
 
     ### Create a package for dotnet inclusion
     Remove-Item "$OutputLocation/Interface/dotnetlinkps.dll"

@@ -4,6 +4,7 @@ using dotnetlink;
 namespace dotnetlinkps
 {
     [Cmdlet(VerbsCommon.Get, "IPAddress4")]
+    [OutputType(typeof(IPAddress4))]
     public class GetIPAddress4 : PSCmdlet
     {
         private IPAddress4[] addresses;

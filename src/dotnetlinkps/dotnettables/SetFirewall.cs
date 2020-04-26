@@ -1,24 +1,20 @@
+using System;
 using System.Management.Automation;
-using System.Net;
-using dotnetlink;
+using dotnettables;
+using Newtonsoft.Json;
+using Connector = dotnettables.Connector;
 
 namespace dotnetlinkps
 {
-    [Cmdlet(VerbsCommon.Add, "IPAddress4")]
-    public class AddIPAddress4 : PSCmdlet
+    [Cmdlet(VerbsCommon.Set, "Firewall")]
+    public class SetFirewall : PSCmdlet
     {
-        private NetlinkSocket socket;
-
-        [Parameter] public IPAddress address;
-
-        [Parameter] public byte netmask;
-
-        [Parameter] public int nic;
+        [Parameter] public Firewall Firewall;
 
         protected override void BeginProcessing()
         {
-            socket = SingletonRepository.getNetlinkSocket();
-            socket.addIPAddress(new IPAddress4(address, netmask, nic));
+            Connector.ClearAll();
+            Connector.SetFirewall(Firewall);
         }
 
         protected override void ProcessRecord()

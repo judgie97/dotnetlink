@@ -1,24 +1,20 @@
 using System.Management.Automation;
-using System.Net;
-using dotnetlink;
+using dotnettables;
 
 namespace dotnetlinkps
 {
-    [Cmdlet(VerbsCommon.Add, "IPAddress4")]
-    public class AddIPAddress4 : PSCmdlet
+    [Cmdlet(VerbsCommon.Add, "FirewallTable")]
+    public class AddFirewallTable : PSCmdlet
     {
-        private NetlinkSocket socket;
-
-        [Parameter] public IPAddress address;
-
-        [Parameter] public byte netmask;
-
-        [Parameter] public int nic;
+        [Parameter] public AddressFamily family;
+        [Parameter] public string name;
 
         protected override void BeginProcessing()
         {
-            socket = SingletonRepository.getNetlinkSocket();
-            socket.addIPAddress(new IPAddress4(address, netmask, nic));
+            Firewall firewall = new Firewall();
+            Table table = new Table(name, family);
+            firewall.AddTable(table);
+            Connector.SetFirewall(firewall);
         }
 
         protected override void ProcessRecord()

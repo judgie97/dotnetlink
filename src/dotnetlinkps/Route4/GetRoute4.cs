@@ -6,6 +6,7 @@ using libnl;
 namespace dotnetlinkps
 {
     [Cmdlet(VerbsCommon.Get, "Route4")]
+    [OutputType(typeof(Route4))]
     public class GetRoute4 : PSCmdlet
     {
         private Route4[] routes;

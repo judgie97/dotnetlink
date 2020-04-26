@@ -2,7 +2,7 @@
 ###     Base
 ###############################
 
-FROM ubuntu as base
+FROM ubuntu:focal as base
 
 RUN apt update
 RUN apt install -y apt-transport-https
@@ -74,10 +74,12 @@ RUN pwsh -C ". ./Build.ps1; Build-DotNetLink"
 
 FROM runtime
 
-RUN apt install -y libnl-route-3-200
+RUN apt install -y libnl-route-3-200 nftables
 
 RUN ln -s /lib/x86_64-linux-gnu/libnl-3.so.200 /lib/x86_64-linux-gnu/libnl-3.so
 RUN ln -s /usr/lib/x86_64-linux-gnu/libnl-route-3.so.200 /usr/lib/x86_64-linux-gnu/libnl-route-3.so
+
+ENV DOTNET_ROOT=/opt/microsoft/dotnet/
 
 COPY --from=build-env /compile/Build/PowerShell/ /opt/microsoft/powershell/Modules/dotnetlinkps/
 

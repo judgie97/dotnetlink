@@ -4,6 +4,7 @@ using dotnetlink;
 namespace dotnetlinkps
 {
     [Cmdlet(VerbsCommon.Get, "NetworkInterface")]
+    [OutputType(typeof(NetworkInterface))]
     public class GetNetworkInterface : PSCmdlet
     {
         private NetworkInterface[] interfaces;
