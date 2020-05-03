@@ -8,6 +8,13 @@ namespace test.dotnettables
     public class ChainSerializationTests
     {
         [Test]
+        public void ToStringConversion()
+        {
+            Chain chain = new Chain("test", AddressFamily.INET, Policy.DROP, ChainType.NAT, Hook.INPUT, 0, 0);
+            Assert.AreEqual("test", chain.ToString());
+        }
+
+        [Test]
         public void Deserialization()
         {
             string json =
