@@ -28,9 +28,7 @@ namespace dotnettables.Statements
 
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            string schemaJson = "{\"type\": \"object\",\"properties\": {\"drop\": {\"type\": \"null\"}},\"required\": [\"drop\"]}";
-            JSchema schema = JSchema.Parse(schemaJson);
-
+            JSchema schema = JSchema.Parse(JsonSchema.DropStatementSchema);
             
             JObject dropWrapper = JObject.Load(reader);
             if (dropWrapper.IsValid(schema))

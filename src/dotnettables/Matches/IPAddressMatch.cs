@@ -62,9 +62,7 @@ namespace dotnettables.Matches
 
       public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
       {
-        string schemaJson =
-          "{\"type\": \"object\",\"properties\": {\"match\": {\"type\": \"object\",\"properties\": {\"op\": {\"type\": \"string\",\"enum\": [\"==\"]},\"left\": {\"type\": \"object\",\"properties\": {\"payload\": {\"type\": \"object\",\"properties\": {\"protocol\": {\"type\": \"string\",\"enum\": [\"ip\"]},\"field\": {\"type\": \"string\",\"enum\": [\"saddr\",\"daddr\"]}},\"required\": [\"protocol\",\"field\"]}},\"required\": [\"payload\"]},\"right\": {\"type\": \"string\"}},\"required\": [\"op\",\"left\",\"right\"]}},\"required\": [\"match\"]}";
-        JSchema schema = JSchema.Parse(schemaJson);
+        JSchema schema = JSchema.Parse(JsonSchema.IPAddressMatchSchema);
 
             
         JObject ipAddressMatch = JObject.Load(reader);

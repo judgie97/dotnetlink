@@ -54,10 +54,8 @@ namespace dotnettables.Matches
 
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            string schemaJson = "{\"type\" : \"object\",\"properties\" : {\"match\": {\"type\" : \"object\",\"properties\" : {\"op\" : {\"type\" : \"string\",\"enum\": [\"==\"]},\"left\" : {\"type\" : \"object\",\"properties\": {\"ct\" : {\"type\" : \"object\",\"properties\": {\"key\" : {\"type\" : \"string\",\"enum\": [\"state\"]}},\"required\": [\"key\"]}},\"required\" : [\"ct\"]},\"right\" : {\"type\": \"string\",\"enum\": [\"invalid\", \"established\", \"related\", \"new\", \"untracked\"]}},\"required\" : [\"op\", \"left\", \"right\"]}},\"required\" : [\"match\"]}";
-            JSchema schema = JSchema.Parse(schemaJson);
+            JSchema schema = JSchema.Parse(JsonSchema.ConntrackSchema);
 
-            
             JObject conntrackStateMatch = JObject.Load(reader);
             if (conntrackStateMatch.IsValid(schema))
             {

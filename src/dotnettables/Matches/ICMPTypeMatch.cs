@@ -57,9 +57,7 @@ namespace dotnettables.Matches
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
             JsonSerializer serializer)
         {
-            string schemaJson =
-                "{\"type\" : \"object\",\"properties\" : {\"match\": {\"type\" : \"object\",\"properties\" : {\"op\" : {\"type\" : \"string\",\"enum\": [\"==\"]},\"left\" : {\"type\" : \"object\",\"properties\": {\"payload\" : {\"type\" : \"object\",\"properties\": {\"protocol\" : {\"type\" : \"string\",\"enum\": [\"icmp\"]},\"field\" : {\"type\" : \"string\",\"enum\" : [\"type\"]}},\"required\": [\"protocol\", \"field\"]}},\"required\" : [\"payload\"]},\"right\" : {\"type\":\"integer\"}},\"required\" : [\"op\", \"left\", \"right\"]}},\"required\" : [\"match\"]}";
-            JSchema schema = JSchema.Parse(schemaJson);
+            JSchema schema = JSchema.Parse(JsonSchema.ICMPTypeSchema);
 
             
             JObject icmpTypeMatch = JObject.Load(reader);
