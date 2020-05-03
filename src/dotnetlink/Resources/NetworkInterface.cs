@@ -9,18 +9,18 @@ namespace dotnetlink
 {
     public class NetworkInterface
     {
-        public int index;
-        public int parentInterfaceIndex;
-        public String interfaceName;
-        public PhysicalAddress hardwareAddress;
-        public bool isUp;
-        public bool isBroadcastInterface;
-        public bool isLoopbackInterface;
-        public bool isPointToPointInterface;
-        public bool isNBMAInterface;
-        public bool isPromiscuousInterface;
-        public InterfaceType interfaceType;
-        public Object interfaceInformation;
+        public int index { get; set; }
+        public int parentInterfaceIndex { get; set; }
+        public String interfaceName { get; set; }
+        public PhysicalAddress hardwareAddress { get; set; }
+        public bool isUp { get; set; }
+        public bool isBroadcastInterface { get; set; }
+        public bool isLoopbackInterface { get; set; }
+        public bool isPointToPointInterface { get; set; }
+        public bool isNBMAInterface { get; set; }
+        public bool isPromiscuousInterface { get; set; }
+        public InterfaceType interfaceType { get; set; }
+        public Object interfaceInformation { get; set; }
 
         public NetworkInterface(int index, int parentInterfaceIndex, String interfaceName,
             PhysicalAddress hardwareAddress, bool isUp,
@@ -50,17 +50,18 @@ namespace dotnetlink
         {
             index = LibNLRoute3.rtnl_link_get_ifindex(link);
             parentInterfaceIndex = LibNLRoute3.rtnl_link_get_link(link);
-            interfaceName = Util.nativeToManagedString((sbyte*)LibNLRoute3.rtnl_link_get_name(link));
-            
+            interfaceName = Util.nativeToManagedString((sbyte*) LibNLRoute3.rtnl_link_get_name(link));
+
             nl_addr* hwAddr = LibNLRoute3.rtnl_link_get_addr(link);
-            byte* mac = (byte*)LibNL3.nl_addr_get_binary_addr(hwAddr);
+            byte* mac = (byte*) LibNL3.nl_addr_get_binary_addr(hwAddr);
             byte[] macBytes = new byte[6];
             for (int i = 0; i < 6; i++)
             {
                 macBytes[i] = mac[i];
             }
+
             hardwareAddress = new PhysicalAddress(macBytes);
-            
+
             isUp = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.UP) == 0;
             isBroadcastInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.BROADCAST) != 0;
             isLoopbackInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.LOOPBACK) != 0;
@@ -68,8 +69,8 @@ namespace dotnetlink
             isNBMAInterface = !(isBroadcastInterface || isLoopbackInterface || isPointToPointInterface);
             isPromiscuousInterface = (LibNLRoute3.rtnl_link_get_flags(link) & NLInterfaceFlags.PROMISC) != 0;
             interfaceType = InterfaceType.PHYSICAL;
-            
-            if(Util.nativeToManagedString((sbyte*)LibNLRoute3.rtnl_link_get_type(link)).Equals("bridge"))
+
+            if (Util.nativeToManagedString((sbyte*) LibNLRoute3.rtnl_link_get_type(link)).Equals("bridge"))
             {
                 interfaceType = InterfaceType.BRIDGE;
             }
@@ -82,7 +83,7 @@ namespace dotnetlink
             if (LibNLRoute3.rtnl_link_is_vlan(link) != 0)
             {
                 interfaceType = InterfaceType.DOT1Q;
-                VLAN info = new VLAN((ushort)LibNLRoute3.rtnl_link_vlan_get_id(link));
+                VLAN info = new VLAN((ushort) LibNLRoute3.rtnl_link_vlan_get_id(link));
                 interfaceInformation = info;
             }
         }

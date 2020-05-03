@@ -2,7 +2,7 @@ namespace dotnetlink
 {
     public class VLAN
     {
-        public ushort vlanID;
+        public ushort vlanID { get; set; }
 
         public VLAN()
         {

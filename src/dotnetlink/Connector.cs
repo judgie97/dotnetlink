@@ -59,7 +59,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_addr_set_ifindex(addr, ipAddress4.nic);
             LibNLRoute3.rtnl_addr_set_scope(addr, 0);
 
-            uint address = Util.ip4touint(ipAddress4.address);
+            uint address = Util.ip4touint(ipAddress4.Address);
             nl_addr* nlAddr = LibNL3.nl_addr_build(AddressFamily.INET, &address, 4);
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.nic);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
@@ -73,7 +73,7 @@ namespace dotnetlink
             LibNLRoute3.rtnl_addr_set_ifindex(addr, ipAddress4.nic);
             LibNLRoute3.rtnl_addr_set_scope(addr, 0);
 
-            uint address = Util.ip4touint(ipAddress4.address);
+            uint address = Util.ip4touint(ipAddress4.Address);
             nl_addr* nlAddr = LibNL3.nl_addr_build(AddressFamily.INET, &address, 4);
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress4.netmask);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
@@ -184,7 +184,7 @@ namespace dotnetlink
                 current = LibNL3.nl_cache_get_next(current);
             }
 
-            return addresses.Where(a => a.address.GetAddressBytes().Length == 4).ToArray();
+            return addresses.Where(a => a.Address.GetAddressBytes().Length == 4).ToArray();
         }
         
         public static NetworkInterface[] requestAllNetworkInterfaces(nl_sock* socket)

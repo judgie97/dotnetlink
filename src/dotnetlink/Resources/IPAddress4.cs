@@ -6,13 +6,13 @@ namespace dotnetlink
 {
     public class IPAddress4
     {
-        public IPAddress address;
-        public byte netmask;
-        public int nic;
+        public IPAddress Address { get; set; }
+        public byte netmask { get; set; }
+        public int nic { get; set; }
 
         public IPAddress4(IPAddress address, byte netmask, int nic)
         {
-            this.address = address;
+            this.Address = address;
             this.netmask = netmask;
             this.nic = nic;
         }
@@ -31,7 +31,7 @@ namespace dotnetlink
             {
                 bytes[i] = ((byte*)LibNL3.nl_addr_get_binary_addr(addr))[i];
             }
-            this.address = new IPAddress(bytes);
+            this.Address = new IPAddress(bytes);
             this.netmask = (byte) LibNL3.nl_addr_get_prefixlen(addr);
             this.nic = LibNLRoute3.rtnl_addr_get_ifindex(address);
         }

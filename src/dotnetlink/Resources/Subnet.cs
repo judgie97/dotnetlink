@@ -5,8 +5,8 @@ namespace dotnetlink
 {
     public class Subnet
     {
-        public IPAddress NetworkAddress;
-        public uint Netmask;
+        public IPAddress NetworkAddress { get; set; }
+        public uint Netmask { get; set; }
 
         public Subnet(IPAddress networkAddress, uint netmask)
         {
