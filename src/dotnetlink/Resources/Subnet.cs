@@ -8,6 +8,17 @@ namespace dotnetlink
         public IPAddress NetworkAddress { get; set; }
         public uint Netmask { get; set; }
 
+        public Subnet(String cidr)
+        {
+            String[] parts = cidr.Split('/');
+            if(parts.Length != 2)
+                throw new FormatException("Invalid cidr format");
+            
+            NetworkAddress = IPAddress.Parse(parts[0]);
+
+            Netmask = UInt32.Parse(parts[1]);
+        }
+
         public Subnet(IPAddress networkAddress, uint netmask)
         {
             NetworkAddress = networkAddress;
