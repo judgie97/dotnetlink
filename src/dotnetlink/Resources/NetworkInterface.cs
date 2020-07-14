@@ -21,6 +21,7 @@ namespace dotnetlink
         public bool isPromiscuousInterface { get; set; }
         public InterfaceType interfaceType { get; set; }
         public Object interfaceInformation { get; set; }
+        public InterfaceEncapsulation encapsulation { get; set; }
 
         public NetworkInterface(int index, int parentInterfaceIndex, String interfaceName,
             PhysicalAddress hardwareAddress, bool isUp,
@@ -80,9 +81,10 @@ namespace dotnetlink
                 interfaceType = InterfaceType.LOOPBACK;
             }
 
+            encapsulation = InterfaceEncapsulation.NONE;
             if (LibNLRoute3.rtnl_link_is_vlan(link) != 0)
             {
-                interfaceType = InterfaceType.DOT1Q;
+                encapsulation = InterfaceEncapsulation.DOT1Q;
                 VLAN info = new VLAN((ushort) LibNLRoute3.rtnl_link_vlan_get_id(link));
                 interfaceInformation = info;
             }

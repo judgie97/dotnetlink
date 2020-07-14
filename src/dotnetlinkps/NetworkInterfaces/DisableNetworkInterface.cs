@@ -11,7 +11,7 @@ namespace dotnetlinkps
         protected override void BeginProcessing()
         {
             NetlinkSocket socket = SingletonRepository.getNetlinkSocket();
-            socket.setNetworkInterface(nic, false);
+            socket.setInterfaceState(nic.index, InterfaceState.DOWN);
         }
 
         protected override void ProcessRecord()

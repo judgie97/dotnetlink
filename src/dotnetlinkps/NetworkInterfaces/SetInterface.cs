@@ -1,21 +1,22 @@
+﻿using System;
 using System.Management.Automation;
 using dotnetlink;
 
-namespace dotnetlinkps.Util
+namespace dotnetlinkps
 {
-    [Cmdlet(VerbsCommon.New, "InterfaceInformation")]
-
-    public class NewInterfaceInformation : PSCmdlet
+    [Cmdlet(VerbsCommon.Set, "Interface")]
+    public class SetInterface : PSCmdlet
     {
-        [Parameter(Position = 0)] public InterfaceType type;
-        [Parameter(Position = 1)] public ushort vlanID;
-        
+        [Parameter(Mandatory = true)] public int Identity { get; set; }
+
+        [Parameter] public InterfaceState State { get; set; } = InterfaceState.UNSPECIFIED;
+
         protected override void BeginProcessing()
         {
-            if (type == InterfaceType.DOT1Q)
+            NetlinkSocket socket = SingletonRepository.getNetlinkSocket();
+            if (State != InterfaceState.UNSPECIFIED)
             {
-                VLAN vlan = new VLAN(vlanID);
-                WriteObject(vlan);
+                socket.setInterfaceState(Identity, State);
             }
         }
 

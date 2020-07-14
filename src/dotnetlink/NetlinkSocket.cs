@@ -78,9 +78,18 @@ namespace dotnetlink
             return interfaces;
         }
         
-        public void setNetworkInterface(NetworkInterface networkInterface, bool up)
+        public void setInterfaceState(int index, InterfaceState state)
         {
-            int r = Connector.setNetworkInterface(m_sockfd, networkInterface.index, up);
+            int r = Connector.setNetworkInterfaceState(m_sockfd, index, state == InterfaceState.UP);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException((NetlinkExceptionValue)r);
+            }
+        }
+        
+        public void setInterfaceName(int index, String name)
+        {
+            int r = Connector.setNetworkInterfaceName(m_sockfd, index, name);
             if (r < 0)
             {
                 throw new NetlinkSocketException((NetlinkExceptionValue)r);

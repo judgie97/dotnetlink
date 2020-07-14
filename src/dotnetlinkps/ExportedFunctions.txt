@@ -6,15 +6,14 @@ Get-IPAddress4
 Add-NetworkInterface
 Disable-NetworkInterface
 Enable-NetworkInterface
-Get-NetworkInterface
+Get-Interface
+Set-Interface
 Remove-NetworkInterface
 # Route Management
 Add-Route4
 Get-Route4
 New-Route4
 Remove-Route4
-# Util
-New-InterfaceInformation
 # Firewall config
 Get-Firewall
 Set-Firewall

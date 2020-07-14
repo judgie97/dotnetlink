@@ -3,9 +3,9 @@ using dotnetlink;
 
 namespace dotnetlinkps
 {
-    [Cmdlet(VerbsCommon.Get, "NetworkInterface")]
-    [OutputType(typeof(NetworkInterface))]
-    public class GetNetworkInterface : PSCmdlet
+    [Cmdlet(VerbsCommon.Get, "Interface")]
+    [OutputType(typeof(InterfaceDTO))]
+    public class GetInterface : PSCmdlet
     {
         private NetworkInterface[] interfaces;
 
@@ -24,13 +24,29 @@ namespace dotnetlinkps
             interfaces = socket.getNetworkInterfaces();
         }
 
+        private void WriteInterface(NetworkInterface networkInterface)
+        {
+            InterfaceDTO interfaceDto = new InterfaceDTO
+            {
+                Index = networkInterface.index,
+                ParentInterfaceIndex = networkInterface.parentInterfaceIndex,
+                Name = networkInterface.interfaceName,
+                HardwareAddress = networkInterface.hardwareAddress,
+                PromiscuousMode = networkInterface.isPromiscuousInterface,
+                Type = networkInterface.interfaceType,
+                Encapsulation = networkInterface.encapsulation,
+                State = networkInterface.isUp ? InterfaceState.UP : InterfaceState.DOWN
+            };
+            WriteObject(interfaceDto);
+        }
+
         protected override void ProcessRecord()
         {
             if (interfaceNames == null)
             {
                 foreach (var i in interfaces)
                 {
-                    WriteObject(i);
+                    WriteInterface(i);
                 }
             }
             else
@@ -41,7 +57,7 @@ namespace dotnetlinkps
                     {
                         if (i.interfaceName.ToLower() == n.ToLower())
                         {
-                            WriteObject(i);
+                            WriteInterface(i);
                         }
                     }
                 }

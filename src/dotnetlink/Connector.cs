@@ -8,7 +8,7 @@ namespace dotnetlink
         public static int addRoute(nl_sock* socket, Route4 route4)
         {
             rtnl_route* route = LibNLRoute3.rtnl_route_alloc();
-            LibNLRoute3.rtnl_route_set_table(route, (uint)RoutingTable.MAIN);
+            LibNLRoute3.rtnl_route_set_table(route, (uint) RoutingTable.MAIN);
 
             uint dest = Util.ip4touint(route4.destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
@@ -32,7 +32,7 @@ namespace dotnetlink
         public static int removeRoute(nl_sock* socket, Route4 route4)
         {
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
-            LibNLRoute3.rtnl_route_set_table(nlRoute, (uint)RoutingTable.MAIN);
+            LibNLRoute3.rtnl_route_set_table(nlRoute, (uint) RoutingTable.MAIN);
 
             uint dest = Util.ip4touint(route4.destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
@@ -84,25 +84,25 @@ namespace dotnetlink
         public static int addInterface(nl_sock* socket, NetworkInterface networkInterface)
         {
             rtnl_link* nlLink = LibNLRoute3.rtnl_link_vlan_alloc();
-            LibNLRoute3.rtnl_link_set_link(nlLink,  networkInterface.parentInterfaceIndex);
+            LibNLRoute3.rtnl_link_set_link(nlLink, networkInterface.parentInterfaceIndex);
             fixed (char* name = networkInterface.interfaceName)
             {
                 LibNLRoute3.rtnl_link_set_name(nlLink, name);
             }
 
-            if (networkInterface.interfaceType == InterfaceType.DOT1Q)
+            if (networkInterface.encapsulation == InterfaceEncapsulation.DOT1Q)
             {
                 string type = "vlan";
                 fixed (char* vlan = type)
                 {
                     LibNLRoute3.rtnl_link_set_type(nlLink, vlan);
-                    LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN)(networkInterface.interfaceInformation)).vlanID);
+                    LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN) (networkInterface.interfaceInformation)).vlanID);
                 }
             }
 
             return LibNLRoute3.rtnl_link_add(socket, nlLink, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
-        
+
         public static int removeInterface(nl_sock* socket, NetworkInterface networkInterface)
         {
             rtnl_link* nlLink = LibNLRoute3.rtnl_link_vlan_alloc();
@@ -112,35 +112,48 @@ namespace dotnetlink
             {
                 LibNLRoute3.rtnl_link_set_name(nlLink, name);
             }
-            
-            if(networkInterface.interfaceType == InterfaceType.DOT1Q)
+
+            if (networkInterface.encapsulation == InterfaceEncapsulation.DOT1Q)
             {
                 string type = "vlan";
                 fixed (char* vlan = type)
                 {
                     LibNLRoute3.rtnl_link_set_type(nlLink, vlan);
-                    LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN)(networkInterface.interfaceInformation)).vlanID);
+                    LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN) (networkInterface.interfaceInformation)).vlanID);
                 }
             }
 
             return LibNLRoute3.rtnl_link_delete(socket, nlLink);
         }
 
-        public static int setNetworkInterface(nl_sock* socket, int networkInterfaceIndex, bool up)
+        public static int setNetworkInterfaceState(nl_sock* socket, int index, bool up)
+        {
+            nl_cache* cache;
+            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, index);
+
+            rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
+            if (up)
+            {
+                LibNLRoute3.rtnl_link_set_flags(changed, NLInterfaceFlags.UP);
+            }
+            else
+            {
+                LibNLRoute3.rtnl_link_unset_flags(changed, NLInterfaceFlags.UP);
+            }
+
+            return LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
+        }
+
+        public static int setNetworkInterfaceName(nl_sock* socket, int networkInterfaceIndex, string name)
         {
             nl_cache* cache;
             LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, networkInterfaceIndex);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
-            if (up)
-            {
-                LibNLRoute3.rtnl_link_set_flags(changed, NLMessageFlag.REQUEST);
-            }
-            else
-            {
-                LibNLRoute3.rtnl_link_unset_flags(changed, NLMessageFlag.REQUEST);
-            }
+            fixed (char* n = name)
+                LibNLRoute3.rtnl_link_set_name(changed, n);
 
             return LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
         }
@@ -157,7 +170,7 @@ namespace dotnetlink
             Route4[] routes = new Route4[count];
 
             nl_object* current = LibNL3.nl_cache_get_first(cache);
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 routes[i] = new Route4(current);
                 current = LibNL3.nl_cache_get_next(current);
@@ -165,7 +178,7 @@ namespace dotnetlink
 
             return routes;
         }
-        
+
         public static IPAddress4[] requestAllAddresses(nl_sock* socket)
         {
             nl_cache* cache;
@@ -178,7 +191,7 @@ namespace dotnetlink
             IPAddress4[] addresses = new IPAddress4[count];
 
             nl_object* current = LibNL3.nl_cache_get_first(cache);
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 addresses[i] = new IPAddress4(current);
                 current = LibNL3.nl_cache_get_next(current);
@@ -186,7 +199,7 @@ namespace dotnetlink
 
             return addresses.Where(a => a.Address.GetAddressBytes().Length == 4).ToArray();
         }
-        
+
         public static NetworkInterface[] requestAllNetworkInterfaces(nl_sock* socket)
         {
             nl_cache* cache;
@@ -199,7 +212,7 @@ namespace dotnetlink
             NetworkInterface[] interfaces = new NetworkInterface[count];
 
             nl_object* current = LibNL3.nl_cache_get_first(cache);
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 interfaces[i] = new NetworkInterface(current);
                 current = LibNL3.nl_cache_get_next(current);

@@ -13,14 +13,14 @@ RUN apt install -y curl libicu-dev
 ###     SDK
 ###############################
 FROM base as sdk
-
+ARG POWERSHELLVERSION="7.0.2"
 WORKDIR /dotnet
-RUN curl -sL https://download.visualstudio.microsoft.com/download/pr/f65a8eb0-4537-4e69-8ff3-1a80a80d9341/cc0ca9ff8b9634f3d9780ec5915c1c66/dotnet-sdk-3.1.201-linux-x64.tar.gz -o dotnet.tar.gz
+RUN curl -sL https://download.visualstudio.microsoft.com/download/pr/8db2b522-7fa2-4903-97ec-d6d04d297a01/f467006b9098c2de256e40d2e2f36fea/dotnet-sdk-3.1.301-linux-x64.tar.gz -o dotnet.tar.gz
 RUN tar -xf dotnet.tar.gz
 RUN rm dotnet.tar.gz
 
 WORKDIR /powershell
-RUN curl -sL https://github.com/PowerShell/PowerShell/releases/download/v7.0.0/powershell-7.0.0-linux-x64.tar.gz -o powershell.tar.gz
+RUN curl -sL https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELLVERSION}/powershell-${POWERSHELLVERSION}-linux-x64.tar.gz -o powershell.tar.gz
 RUN tar -xf powershell.tar.gz
 RUN rm powershell.tar.gz
 
@@ -37,14 +37,14 @@ RUN ln -s /opt/microsoft/powershell/7.0.0/pwsh /usr/bin/pwsh
 ###############################
 
 FROM base as runtime
-
+ARG POWERSHELLVERSION="7.0.2"
 WORKDIR /dotnet
-RUN curl -sL https://download.visualstudio.microsoft.com/download/pr/c1d419e7-4312-4464-b272-27bee7676560/22e7bb584ff56f3089c85d98b21c0445/dotnet-runtime-3.1.3-linux-x64.tar.gz -o dotnet.tar.gz
+RUN curl -sL https://download.visualstudio.microsoft.com/download/pr/d00eaeea-6d7b-4e73-9d96-c0234ed3b665/0d25d9d1aeaebdeef01d15370d5cd22b/dotnet-runtime-3.1.5-linux-x64.tar.gz -o dotnet.tar.gz
 RUN tar -xf dotnet.tar.gz
 RUN rm dotnet.tar.gz
 
 WORKDIR /powershell
-RUN curl -sL https://github.com/PowerShell/PowerShell/releases/download/v7.0.0/powershell-7.0.0-linux-x64.tar.gz -o powershell.tar.gz
+RUN curl -sL https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELLVERSION}/powershell-${POWERSHELLVERSION}-linux-x64.tar.gz -o powershell.tar.gz
 RUN tar -xf powershell.tar.gz
 RUN rm powershell.tar.gz
 
