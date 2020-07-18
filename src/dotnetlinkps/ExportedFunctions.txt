@@ -1,22 +1,13 @@
-# IP Address Management
-Add-IPAddress4
-Remove-IPAddress4
-Get-IPAddress4
+# IP Configuration Management
+Add-IPConfiguration
+Remove-IPConfiguration
+Get-IPConfiguration
 # Interface Management
-Add-NetworkInterface
-Disable-NetworkInterface
-Enable-NetworkInterface
+Add-Interface
 Get-Interface
 Set-Interface
 Remove-NetworkInterface
 # Route Management
-Add-Route4
-Get-Route4
-New-Route4
-Remove-Route4
-# Firewall config
-Get-Firewall
-Set-Firewall
-Add-Firewall
-Add-FirewallChain
-New-FirewallRule
+Add-Route
+Get-Route
+Remove-Route

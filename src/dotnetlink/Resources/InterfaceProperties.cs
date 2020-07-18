@@ -4,13 +4,8 @@ namespace dotnetlink
     {
         PHYSICAL,
         LOOPBACK,
-        BRIDGE
-    }
-
-    public enum InterfaceEncapsulation
-    {
-        NONE,
-        DOT1Q
+        BRIDGE,
+        VLAN
     }
     
     public enum InterfaceState

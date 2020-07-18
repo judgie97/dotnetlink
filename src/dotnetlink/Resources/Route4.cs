@@ -12,6 +12,8 @@ namespace dotnetlink
         public RoutingProtocol protocol { get; set; }
         public RoutingTable routingTable { get; set; }
         public RouteScope scope { get; set; }
+        
+        public uint priority { get; set; }
 
         public Route4(Subnet destination, IPAddress gateway, int nic, RoutingProtocol protocol,
             RoutingTable routingTable)
@@ -49,6 +51,8 @@ namespace dotnetlink
 
             routingTable = (RoutingTable) LibNLRoute3.rtnl_route_get_table(route);
             scope = (RouteScope) LibNLRoute3.rtnl_route_get_scope(route);
+            
+            priority = LibNLRoute3.rtnl_route_get_priority(route);
         }
     }
 }

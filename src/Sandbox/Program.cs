@@ -8,7 +8,8 @@ namespace Sandbox
         static void Main(string[] args)
         {
             NetlinkSocket socket = new NetlinkSocket();
-            socket.setInterfaceState(2, InterfaceState.UP);
+            Route4[] routes = socket.getRoutingTable();
+            Console.WriteLine();
         }
     }
 }

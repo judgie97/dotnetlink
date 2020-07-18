@@ -16,11 +16,11 @@ namespace dotnetlink
 
         public static unsafe string nativeToManagedString(sbyte* native, int maxLength = 50)
         {
-            if (native == (sbyte*)0)
+            if (native == (sbyte*) 0)
             {
                 return "";
             }
-            
+
             int i = 0;
             while (native[i] != '\0')
             {
@@ -31,8 +31,20 @@ namespace dotnetlink
 
                 i++;
             }
-            
+
             return new string(native, 0, i, Encoding.UTF8);
+        }
+
+        public static byte[] StringToNativeBytes(String str)
+        {
+            var bytes = System.Text.Encoding.Unicode.GetBytes(str + "\0");
+            var rawBytes = new byte[bytes.Length / 2];
+            for (int i = 0; i < rawBytes.Length; i++)
+            {
+                rawBytes[i] = bytes[2 * i];
+            }
+
+            return rawBytes;
         }
     }
 }
