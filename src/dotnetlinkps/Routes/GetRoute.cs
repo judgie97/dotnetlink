@@ -8,10 +8,10 @@ namespace dotnetlinkps.Routes
 {
     [Cmdlet(VerbsCommon.Get, "Route")]
     [OutputType(typeof(RouteDto))]
-    public class GetRoute4 : PSCmdlet
+    public class GetRoute : PSCmdlet
     {
-        private Route4[] routes;
-        private NetworkInterface[] interfaces;
+        private Route4[] _routes;
+        private NetworkInterface[] _interfaces;
 
         [Parameter(Mandatory = false)] public RoutingTable RoutingTable { get; set; } = RoutingTable.MAIN;
 
@@ -19,15 +19,15 @@ namespace dotnetlinkps.Routes
 
         protected override void BeginProcessing()
         {
-            NetlinkSocket socket = SingletonRepository.getNetlinkSocket();
-            routes = socket.getRoutingTable();
-            interfaces = socket.getNetworkInterfaces();
+            var socket = SingletonRepository.getNetlinkSocket();
+            _routes = socket.getRoutingTable();
+            _interfaces = socket.getNetworkInterfaces();
 
             if (RoutingTable != RoutingTable.ANY)
-                routes = routes.Where(r => r.routingTable == RoutingTable).ToArray();
+                _routes = _routes.Where(r => r.routingTable == RoutingTable).ToArray();
 
             if (RouteScope != RouteScope.ANY)
-                routes = routes.Where(r => r.scope == RouteScope).ToArray();
+                _routes = _routes.Where(r => r.scope == RouteScope).ToArray();
 
         }
 
@@ -42,7 +42,7 @@ namespace dotnetlinkps.Routes
             {
                 Destination =  route.destination,
                 Gateway = route.gateway,
-                Interface = InterfaceDtoUtil.ConvertToDto(route.nic, interfaces),
+                Interface = InterfaceDtoUtil.ConvertToDto(route.nic, _interfaces),
                 Protocol = route.protocol,
                 RoutingTable = route.routingTable,
                 Scope = route.scope,
@@ -53,7 +53,7 @@ namespace dotnetlinkps.Routes
 
         protected override void EndProcessing()
         {
-            foreach (var route in routes)
+            foreach (var route in _routes)
             {
                 WriteRoute(route);
             }

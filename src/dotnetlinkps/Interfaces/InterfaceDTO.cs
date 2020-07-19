@@ -27,8 +27,8 @@ namespace dotnetlinkps.Interfaces
     {
         public static InterfaceDto ConvertToDto(int nicIndex, NetworkInterface[] interfaces)
         {
-            NetworkInterface networkInterface = interfaces.First(i => i.index == nicIndex);
-            InterfaceDto parent = networkInterface.parentInterfaceIndex == 0
+            var networkInterface = interfaces.First(i => i.index == nicIndex);
+            var parent = networkInterface.parentInterfaceIndex == 0
                 ? null
                 : ConvertToDto(networkInterface.parentInterfaceIndex, interfaces);
 

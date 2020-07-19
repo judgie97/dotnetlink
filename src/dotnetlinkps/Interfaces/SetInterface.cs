@@ -18,8 +18,8 @@ namespace dotnetlinkps.Interfaces
 
         protected override void BeginProcessing()
         {
-            NetlinkSocket socket = SingletonRepository.getNetlinkSocket();
-            NetworkInterface nic = socket.getNetworkInterfaces().First(n => n.interfaceName.ToLower() == Identity);
+            var socket = SingletonRepository.getNetlinkSocket();
+            var nic = socket.getNetworkInterfaces().First(n => n.interfaceName.ToLower() == Identity);
             if (nic == null)
                 throw new Exception("An interface cannot be found which matches " + Identity);
             Console.WriteLine(nic.index);
