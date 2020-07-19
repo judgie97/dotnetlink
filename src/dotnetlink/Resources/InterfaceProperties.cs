@@ -5,7 +5,8 @@ namespace dotnetlink
         PHYSICAL,
         LOOPBACK,
         BRIDGE,
-        VLAN
+        VLAN,
+        VETH
     }
     
     public enum InterfaceState
