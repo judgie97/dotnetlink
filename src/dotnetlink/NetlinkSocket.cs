@@ -77,6 +77,12 @@ namespace dotnetlink
             NetworkInterface[] interfaces = Connector.requestAllNetworkInterfaces(m_sockfd);
             return interfaces;
         }
+        
+        public NetworkInterface getNetworkInterface(String name)
+        {
+            NetworkInterface networkInterface = Connector.requestInterface(m_sockfd, name);
+            return networkInterface;
+        }
 
         public void setInterfaceState(int index, InterfaceState state)
         {

@@ -900,7 +900,7 @@ namespace libnl
         public static extern int rtnl_link_macvtap_unset_flags(rtnl_link* link, ushort flags);
 
         [DllImport("libnl-route-3.so")]
-        public static extern int rtnl_link_name2i(nl_cache* cache, char* name);
+        public static extern int rtnl_link_name2i(nl_cache* cache, byte* name);
 
         [DllImport("libnl-route-3.so")]
         public static extern int rtnl_link_ppp_get_fd(rtnl_link* link, int* fd);

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using libnl;
@@ -111,7 +112,6 @@ namespace dotnetlink
 
             if (networkInterface.interfaceType == InterfaceType.VLAN)
             {
-                
                 LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN) (networkInterface.interfaceInformation)).vlanID);
             }
 
@@ -215,6 +215,28 @@ namespace dotnetlink
             }
 
             return interfaces;
+        }
+
+        public static NetworkInterface requestInterface(nl_sock* socket, String name)
+        {
+            nl_cache* cache;
+            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            //Check that the number of items is not 0
+            int count = LibNL3.nl_cache_nitems(cache);
+            if (count == 0)
+                return null;
+
+
+            byte[] nameBytes = Util.StringToNativeBytes(name);
+            int index;
+            fixed (byte* n = nameBytes)
+            {
+                index = LibNLRoute3.rtnl_link_name2i(cache, n);
+            }
+
+            NetworkInterface networkInterface = new NetworkInterface(LibNLRoute3.rtnl_link_get(cache, index));
+
+            return networkInterface;
         }
 
         public static int setInterfaceVlanID(nl_sock* socket, int nicIndex, ushort vlanId)
