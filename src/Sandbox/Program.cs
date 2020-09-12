@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using dotnetlink;
 
 namespace Sandbox
@@ -8,8 +9,12 @@ namespace Sandbox
         static void Main(string[] args)
         {
             NetlinkSocket socket = new NetlinkSocket();
-            Route4[] routes = socket.GetRoutingTable();
-            Console.WriteLine();
+            NetworkInterface wlp3s0 = socket.GetNetworkInterface("wlp3s0");
+            for (int i = 0; i < 100; i++)
+            {
+                InterfaceStatistics stats = socket.GetInterfaceStatistics(wlp3s0);
+                Thread.Sleep(1000);
+            }
         }
     }
 }

@@ -103,10 +103,6 @@ namespace libnl
     {
     }
 
-    public struct rtnl_link_stat_id_t
-    {
-    }
-
     public struct rtnl_ematch_tree
     {
     }

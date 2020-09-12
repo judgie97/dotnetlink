@@ -127,5 +127,10 @@ namespace dotnetlink
                 throw new NetlinkSocketException(r);
             }
         }
+
+        public InterfaceStatistics GetInterfaceStatistics(NetworkInterface networkInterface)
+        {
+            return Connector.GetInterfaceStatistics(_sockFd, networkInterface.Index);
+        }
     }
 }
