@@ -1,27 +1,28 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using libnl;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
+// ReSharper disable once CheckNamespace
 namespace dotnetlink
 {
     public class NetworkInterface
     {
-        public int index { get; set; }
-        public int parentInterfaceIndex { get; set; }
-        public String interfaceName { get; set; }
-        public PhysicalAddress hardwareAddress { get; set; }
-        public bool isUp { get; set; }
-        public bool isLowerLayerUp { get; set; }
-        public bool isBroadcastInterface { get; set; }
-        public bool isLoopbackInterface { get; set; }
-        public bool isPointToPointInterface { get; set; }
-        public bool isNBMAInterface { get; set; }
-        public bool isPromiscuousInterface { get; set; }
-        public InterfaceType interfaceType { get; set; }
-        public Object interfaceInformation { get; set; }
+        public int Index { get; set; }
+        public int ParentInterfaceIndex { get; set; }
+        public String InterfaceName { get; set; }
+        public PhysicalAddress HardwareAddress { get; set; }
+        public bool IsUp { get; set; }
+        public bool IsLowerLayerUp { get; set; }
+        public bool IsBroadcastInterface { get; set; }
+        public bool IsLoopbackInterface { get; set; }
+        public bool IsPointToPointInterface { get; set; }
+        public bool IsNbmaInterface { get; set; }
+        public bool IsPromiscuousInterface { get; set; }
+        public InterfaceType InterfaceType { get; set; }
+        public object InterfaceInformation { get; set; }
 
         public NetworkInterface(int parentInterfaceIndex, String interfaceName, InterfaceType interfaceType,
             Object interfaceInformation) :
@@ -34,22 +35,22 @@ namespace dotnetlink
         public NetworkInterface(int index, int parentInterfaceIndex, String interfaceName,
             PhysicalAddress hardwareAddress, bool isUp, bool isLowerLayerUp,
             bool isBroadcastInterface,
-            bool isLoopbackInterface, bool isPointToPointInterface, bool isNBMAInterface, bool isPromiscuousInterface,
+            bool isLoopbackInterface, bool isPointToPointInterface, bool isNbmaInterface, bool isPromiscuousInterface,
             InterfaceType interfaceType, Object interfaceInformation)
         {
-            this.index = index;
-            this.parentInterfaceIndex = parentInterfaceIndex;
-            this.interfaceName = interfaceName;
-            this.hardwareAddress = hardwareAddress;
-            this.isUp = isUp;
-            this.isLowerLayerUp = isLowerLayerUp;
-            this.isBroadcastInterface = isBroadcastInterface;
-            this.isLoopbackInterface = isLoopbackInterface;
-            this.isPointToPointInterface = isPointToPointInterface;
-            this.isNBMAInterface = isNBMAInterface;
-            this.isPromiscuousInterface = isPromiscuousInterface;
-            this.interfaceType = interfaceType;
-            this.interfaceInformation = interfaceInformation;
+            Index = index;
+            ParentInterfaceIndex = parentInterfaceIndex;
+            InterfaceName = interfaceName;
+            HardwareAddress = hardwareAddress;
+            IsUp = isUp;
+            IsLowerLayerUp = isLowerLayerUp;
+            IsBroadcastInterface = isBroadcastInterface;
+            IsLoopbackInterface = isLoopbackInterface;
+            IsPointToPointInterface = isPointToPointInterface;
+            IsNbmaInterface = isNbmaInterface;
+            IsPromiscuousInterface = isPromiscuousInterface;
+            InterfaceType = interfaceType;
+            InterfaceInformation = interfaceInformation;
         }
 
         public unsafe NetworkInterface(nl_object* link) : this((rtnl_link*) link)
@@ -58,26 +59,26 @@ namespace dotnetlink
 
         public unsafe NetworkInterface(rtnl_link* link)
         {
-            index = LibNLRoute3.rtnl_link_get_ifindex(link);
-            parentInterfaceIndex = LibNLRoute3.rtnl_link_get_link(link);
-            interfaceName = Util.nativeToManagedString((sbyte*) LibNLRoute3.rtnl_link_get_name(link));
+            Index = LibNLRoute3.rtnl_link_get_ifindex(link);
+            ParentInterfaceIndex = LibNLRoute3.rtnl_link_get_link(link);
+            InterfaceName = Util.NativeToManagedString((sbyte*) LibNLRoute3.rtnl_link_get_name(link));
 
             sbyte* typeStringNative = (sbyte*) LibNLRoute3.rtnl_link_get_type(link);
-            string type = Util.nativeToManagedString(typeStringNative);
+            string type = Util.NativeToManagedString(typeStringNative);
 
             switch (type)
             {
                 case "":
-                    interfaceType = InterfaceType.PHYSICAL;
+                    InterfaceType = InterfaceType.PHYSICAL;
                     break;
                 case "vlan":
-                    interfaceType = InterfaceType.VLAN;
+                    InterfaceType = InterfaceType.VLAN;
                     break;
                 case "bridge":
-                    interfaceType = InterfaceType.BRIDGE;
+                    InterfaceType = InterfaceType.BRIDGE;
                     break;
                 case "veth":
-                    interfaceType = InterfaceType.VETH;
+                    InterfaceType = InterfaceType.VETH;
                     break;
                 default: throw new NotSupportedException("Interface type " + type + " not supported");
             }
@@ -92,27 +93,27 @@ namespace dotnetlink
                     macBytes[i] = mac[i];
                 }
 
-                hardwareAddress = new PhysicalAddress(macBytes);
+                HardwareAddress = new PhysicalAddress(macBytes);
             }
 
             var linkFlags = LibNLRoute3.rtnl_link_get_flags(link);
-            isUp = (linkFlags & NLInterfaceFlags.UP) != 0;
-            isLowerLayerUp = (linkFlags & NLInterfaceFlags.LOWER_UP) != 0;
-            isBroadcastInterface = (linkFlags & NLInterfaceFlags.BROADCAST) != 0;
-            isLoopbackInterface = (linkFlags & NLInterfaceFlags.LOOPBACK) != 0;
-            isPointToPointInterface = (linkFlags & NLInterfaceFlags.POINTOPOINT) != 0;
-            isNBMAInterface = !(isBroadcastInterface || isLoopbackInterface || isPointToPointInterface);
-            isPromiscuousInterface = (linkFlags & NLInterfaceFlags.PROMISC) != 0;
+            IsUp = (linkFlags & NLInterfaceFlags.UP) != 0;
+            IsLowerLayerUp = (linkFlags & NLInterfaceFlags.LOWER_UP) != 0;
+            IsBroadcastInterface = (linkFlags & NLInterfaceFlags.BROADCAST) != 0;
+            IsLoopbackInterface = (linkFlags & NLInterfaceFlags.LOOPBACK) != 0;
+            IsPointToPointInterface = (linkFlags & NLInterfaceFlags.POINTOPOINT) != 0;
+            IsNbmaInterface = !(IsBroadcastInterface || IsLoopbackInterface || IsPointToPointInterface);
+            IsPromiscuousInterface = (linkFlags & NLInterfaceFlags.PROMISC) != 0;
 
-            if (interfaceType == InterfaceType.PHYSICAL && isLoopbackInterface)
+            if (InterfaceType == InterfaceType.PHYSICAL && IsLoopbackInterface)
             {
-                interfaceType = InterfaceType.LOOPBACK;
+                InterfaceType = InterfaceType.LOOPBACK;
             }
 
-            if (interfaceType == InterfaceType.VLAN)
+            if (InterfaceType == InterfaceType.VLAN)
             {
-                var info = new VLAN((ushort) LibNLRoute3.rtnl_link_vlan_get_id(link));
-                interfaceInformation = info;
+                var info = new Vlan((ushort) LibNLRoute3.rtnl_link_vlan_get_id(link));
+                InterfaceInformation = info;
             }
         }
     }

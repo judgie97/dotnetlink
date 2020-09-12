@@ -11,7 +11,7 @@ namespace dotnetlinkps.Interfaces
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            socket.removeNetworkInterface(Interface);
+            socket.RemoveNetworkInterface(Interface);
         }
 
         protected override void ProcessRecord()

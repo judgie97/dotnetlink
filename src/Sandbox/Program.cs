@@ -8,7 +8,7 @@ namespace Sandbox
         static void Main(string[] args)
         {
             NetlinkSocket socket = new NetlinkSocket();
-            Route4[] routes = socket.getRoutingTable();
+            Route4[] routes = socket.GetRoutingTable();
             Console.WriteLine();
         }
     }

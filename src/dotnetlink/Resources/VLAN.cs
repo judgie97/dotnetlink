@@ -1,22 +1,26 @@
+// ReSharper disable CheckNamespace
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
 namespace dotnetlink
 {
-    public class VLAN
+    public class Vlan
     {
-        public ushort vlanID { get; set; }
+        public ushort VlanId { get; set; }
 
-        public VLAN()
+        public Vlan()
         {
-            vlanID = 0;
+            VlanId = 0;
         }
 
-        public VLAN(ushort vlanID)
+        public Vlan(ushort vlanId)
         {
-            this.vlanID = vlanID;
+            this.VlanId = vlanId;
         }
 
         public override string ToString()
         {
-            return "VLAN " + vlanID;
+            return "VLAN " + VlanId;
         }
     }
 }

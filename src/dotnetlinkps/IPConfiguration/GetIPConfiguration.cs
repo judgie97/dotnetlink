@@ -9,14 +9,14 @@ namespace dotnetlinkps.IPConfiguration
     [OutputType(typeof(IpConfigurationDto))]
     public class GetIpConfiguration : PSCmdlet
     {
-        private IPAddress4[] _addresses;
+        private IpAddress4[] _addresses;
         private NetworkInterface[] _interfaces;
 
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            _addresses = socket.getAddresses();
-            _interfaces = socket.getNetworkInterfaces();
+            _addresses = socket.GetAddresses();
+            _interfaces = socket.GetNetworkInterfaces();
         }
 
         protected override void ProcessRecord()
@@ -24,14 +24,14 @@ namespace dotnetlinkps.IPConfiguration
             base.ProcessRecord();
         }
 
-        private void WriteIPConfiguration(IPAddress4 ipAddress4, NetworkInterface networkInterface)
+        private void WriteIPConfiguration(IpAddress4 ipAddress4, NetworkInterface networkInterface)
         {
-            var interfaceDto = InterfaceDtoUtil.ConvertToDto(networkInterface.index, _interfaces);
+            var interfaceDto = InterfaceDtoUtil.ConvertToDto(networkInterface.Index, _interfaces);
 
             var ipConfigurationDto = new IpConfigurationDto
             {
                 Address =  ipAddress4.Address,
-                SubnetMask = ipAddress4.netmask,
+                SubnetMask = ipAddress4.Netmask,
                 Interface =  interfaceDto
             };
             WriteObject(ipConfigurationDto);
@@ -41,7 +41,7 @@ namespace dotnetlinkps.IPConfiguration
         {
             foreach (var address in _addresses)
             {
-                WriteIPConfiguration(address, _interfaces.First(i => i.index == address.nic));
+                WriteIPConfiguration(address, _interfaces.First(i => i.Index == address.Nic));
             }
         }
 

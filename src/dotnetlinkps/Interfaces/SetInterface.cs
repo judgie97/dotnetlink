@@ -19,24 +19,24 @@ namespace dotnetlinkps.Interfaces
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            var nic = socket.getNetworkInterfaces().First(n => n.interfaceName.ToLower() == Identity);
+            var nic = socket.GetNetworkInterfaces().First(n => n.InterfaceName.ToLower() == Identity);
             if (nic == null)
                 throw new Exception("An interface cannot be found which matches " + Identity);
-            Console.WriteLine(nic.index);
+            Console.WriteLine(nic.Index);
             Console.WriteLine(State);
             if (VlanId > 0)
             {
-                socket.setInterfaceVlanID(nic.index, (ushort) VlanId);
+                socket.SetInterfaceVlanId(nic.Index, (ushort) VlanId);
             }
 
             if (State != InterfaceState.UNSPECIFIED)
             {
-                socket.setInterfaceState(nic.index, State);
+                socket.SetInterfaceState(nic.Index, State);
             }
 
             if (NewName != null)
             {
-                socket.setInterfaceName(nic.index, NewName);
+                socket.SetInterfaceName(nic.Index, NewName);
             }
         }
 

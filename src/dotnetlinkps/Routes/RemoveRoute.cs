@@ -13,7 +13,7 @@ namespace dotnetlinkps.Routes
         protected override void BeginProcessing()
         {
             _socket = SingletonRepository.getNetlinkSocket();
-            _socket.removeRoute(Route);
+            _socket.RemoveRoute(Route);
         }
 
         protected override void ProcessRecord()

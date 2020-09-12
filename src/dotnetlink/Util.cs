@@ -1,20 +1,19 @@
 using System;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace dotnetlink
 {
-    public class Util
+    public static class Util
     {
-        public static uint ip4touint(IPAddress address)
+        public static uint Ip4ToUnsignedInt(IPAddress address)
         {
             byte[] bytes = address.GetAddressBytes();
 
             return ((bytes[3] * 256u + bytes[2]) * 256u + bytes[1]) * 256u + bytes[0];
         }
 
-        public static unsafe string nativeToManagedString(sbyte* native, int maxLength = 50)
+        public static unsafe string NativeToManagedString(sbyte* native, int maxLength = 50)
         {
             if (native == (sbyte*) 0)
             {
@@ -37,7 +36,7 @@ namespace dotnetlink
 
         public static byte[] StringToNativeBytes(String str)
         {
-            var bytes = System.Text.Encoding.Unicode.GetBytes(str + "\0");
+            var bytes = Encoding.Unicode.GetBytes(str + "\0");
             var rawBytes = new byte[bytes.Length / 2];
             for (int i = 0; i < rawBytes.Length; i++)
             {

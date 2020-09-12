@@ -9,15 +9,15 @@ namespace dotnetlink
         public static int AddInterface(nl_sock* socket, NetworkInterface networkInterface)
         {
             rtnl_link* nlLink = LibNLRoute3.rtnl_link_vlan_alloc();
-            LibNLRoute3.rtnl_link_set_link(nlLink, networkInterface.parentInterfaceIndex);
-            var nameBytes = Util.StringToNativeBytes(networkInterface.interfaceName);
+            LibNLRoute3.rtnl_link_set_link(nlLink, networkInterface.ParentInterfaceIndex);
+            var nameBytes = Util.StringToNativeBytes(networkInterface.InterfaceName);
             fixed (byte* name = nameBytes)
             {
                 LibNLRoute3.rtnl_link_set_name(nlLink, (char*) name);
             }
 
-            if (networkInterface.interfaceType == InterfaceType.VLAN)
-                LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN) (networkInterface.interfaceInformation)).vlanID);
+            if (networkInterface.InterfaceType == InterfaceType.VLAN)
+                LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((Vlan) (networkInterface.InterfaceInformation)).VlanId);
 
             return LibNLRoute3.rtnl_link_add(socket, nlLink, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
@@ -25,16 +25,16 @@ namespace dotnetlink
         public static int RemoveInterface(nl_sock* socket, NetworkInterface networkInterface)
         {
             rtnl_link* nlLink = LibNLRoute3.rtnl_link_vlan_alloc();
-            LibNLRoute3.rtnl_link_set_ifindex(nlLink, networkInterface.index);
-            LibNLRoute3.rtnl_link_set_link(nlLink, networkInterface.parentInterfaceIndex);
-            fixed (char* name = networkInterface.interfaceName)
+            LibNLRoute3.rtnl_link_set_ifindex(nlLink, networkInterface.Index);
+            LibNLRoute3.rtnl_link_set_link(nlLink, networkInterface.ParentInterfaceIndex);
+            fixed (char* name = networkInterface.InterfaceName)
             {
                 LibNLRoute3.rtnl_link_set_name(nlLink, name);
             }
 
-            if (networkInterface.interfaceType == InterfaceType.VLAN)
+            if (networkInterface.InterfaceType == InterfaceType.VLAN)
             {
-                LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((VLAN) (networkInterface.interfaceInformation)).vlanID);
+                LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((Vlan) (networkInterface.InterfaceInformation)).VlanId);
             }
 
             return LibNLRoute3.rtnl_link_delete(socket, nlLink);

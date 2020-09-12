@@ -1,28 +1,31 @@
 using System.Net;
-using System.Runtime.InteropServices;
 using libnl;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
+// ReSharper disable once CheckNamespace
 namespace dotnetlink
 {
     public class Route4
     {
-        public IPAddress gateway { get; set; }
-        public Subnet destination { get; set; }
-        public int nic { get; set; }
-        public RoutingProtocol protocol { get; set; }
-        public RoutingTable routingTable { get; set; }
-        public RouteScope scope { get; set; }
-        
-        public uint priority { get; set; }
+        public IPAddress Gateway { get; set; }
+        public Subnet Destination { get; set; }
+        public int Nic { get; set; }
+        public RoutingProtocol Protocol { get; set; }
+        public RoutingTable RoutingTable { get; set; }
+        public RouteScope Scope { get; set; }
+
+        public uint Priority { get; set; }
 
         public Route4(Subnet destination, IPAddress gateway, int nic, RoutingProtocol protocol,
             RoutingTable routingTable)
         {
-            this.destination = destination;
-            this.gateway = gateway;
-            this.nic = nic;
-            this.protocol = protocol;
-            this.routingTable = routingTable;
+            Destination = destination;
+            Gateway = gateway;
+            Nic = nic;
+            Protocol = protocol;
+            RoutingTable = routingTable;
         }
 
         public unsafe Route4(nl_object* route) : this((rtnl_route*) route)
@@ -35,24 +38,24 @@ namespace dotnetlink
             byte netmask = (byte) LibNL3.nl_addr_get_prefixlen(destinationAddress);
             uint destinationIpAddress = *(uint*) LibNL3.nl_addr_get_binary_addr(destinationAddress);
             IPAddress destinationNetwork = new IPAddress(destinationIpAddress);
-            destination = new Subnet(destinationNetwork, netmask);
+            Destination = new Subnet(destinationNetwork, netmask);
 
             rtnl_nexthop* gatewayHop = LibNLRoute3.rtnl_route_nexthop_n(route, 0);
-            nic = LibNLRoute3.rtnl_route_nh_get_ifindex(gatewayHop);
+            Nic = LibNLRoute3.rtnl_route_nh_get_ifindex(gatewayHop);
             nl_addr* gatewayAddress = LibNLRoute3.rtnl_route_nh_get_gateway(gatewayHop);
-            gateway = null;
+            Gateway = null;
             if (gatewayAddress != null)
             {
-                uint gatewayIPAddress = *(uint*) LibNL3.nl_addr_get_binary_addr(gatewayAddress);
-                gateway = new IPAddress(gatewayIPAddress);
+                uint gatewayIpAddress = *(uint*) LibNL3.nl_addr_get_binary_addr(gatewayAddress);
+                Gateway = new IPAddress(gatewayIpAddress);
             }
 
-            protocol = (RoutingProtocol) LibNLRoute3.rtnl_route_get_protocol(route);
+            Protocol = (RoutingProtocol) LibNLRoute3.rtnl_route_get_protocol(route);
 
-            routingTable = (RoutingTable) LibNLRoute3.rtnl_route_get_table(route);
-            scope = (RouteScope) LibNLRoute3.rtnl_route_get_scope(route);
-            
-            priority = LibNLRoute3.rtnl_route_get_priority(route);
+            RoutingTable = (RoutingTable) LibNLRoute3.rtnl_route_get_table(route);
+            Scope = (RouteScope) LibNLRoute3.rtnl_route_get_scope(route);
+
+            Priority = LibNLRoute3.rtnl_route_get_priority(route);
         }
     }
 }

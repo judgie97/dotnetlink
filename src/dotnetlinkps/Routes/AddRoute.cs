@@ -19,7 +19,7 @@ namespace dotnetlinkps.Routes
         protected override void BeginProcessing()
         {
             _socket = SingletonRepository.getNetlinkSocket();
-            _socket.addRoute(
+            _socket.AddRoute(
                 new Route4(new Subnet(Destination, DestinationSubnetMask), Gateway, 0, Protocol, Table));
         }
 

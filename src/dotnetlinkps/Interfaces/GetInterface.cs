@@ -19,7 +19,7 @@ namespace dotnetlinkps.Interfaces
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            _interfaces = socket.getNetworkInterfaces();
+            _interfaces = socket.GetNetworkInterfaces();
             if (Name != null)
                 for (int i = 0; i < Name.Length; i++)
                 {
@@ -29,7 +29,7 @@ namespace dotnetlinkps.Interfaces
 
         private void WriteInterface(NetworkInterface networkInterface)
         {
-            var interfaceDto = InterfaceDtoUtil.ConvertToDto(networkInterface.index, _interfaces);
+            var interfaceDto = InterfaceDtoUtil.ConvertToDto(networkInterface.Index, _interfaces);
             WriteObject(interfaceDto);
         }
 
@@ -37,9 +37,9 @@ namespace dotnetlinkps.Interfaces
         {
             IEnumerable<NetworkInterface> linqInterfaces = _interfaces;
             if (Name != null)
-                linqInterfaces = linqInterfaces.Where(i => Name.Contains(i.interfaceName.ToLower()));
+                linqInterfaces = linqInterfaces.Where(i => Name.Contains(i.InterfaceName.ToLower()));
             if (Index != null)
-                linqInterfaces = linqInterfaces.Where(i => Index.Contains(i.index));
+                linqInterfaces = linqInterfaces.Where(i => Index.Contains(i.Index));
             _requestedInterfaces = linqInterfaces.ToArray();
         }
 

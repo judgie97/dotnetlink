@@ -1,27 +1,29 @@
 using System.Net;
-using System.Runtime.InteropServices;
 using libnl;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
+// ReSharper disable once CheckNamespace
 namespace dotnetlink
 {
-    public class IPAddress4
+    public class IpAddress4
     {
         public IPAddress Address { get; set; }
-        public byte netmask { get; set; }
-        public int nic { get; set; }
+        public byte Netmask { get; set; }
+        public int Nic { get; set; }
 
-        public IPAddress4(IPAddress address, byte netmask, int nic)
+        public IpAddress4(IPAddress address, byte netmask, int nic)
         {
             this.Address = address;
-            this.netmask = netmask;
-            this.nic = nic;
+            this.Netmask = netmask;
+            this.Nic = nic;
         }
 
-        public unsafe IPAddress4(nl_object* address) : this((rtnl_addr*) address)
+        public unsafe IpAddress4(nl_object* address) : this((rtnl_addr*) address)
         {
         }
 
-        public unsafe IPAddress4(rtnl_addr* address)
+        public unsafe IpAddress4(rtnl_addr* address)
         {
             nl_addr* addr = LibNLRoute3.rtnl_addr_get_local(address);
             uint addressLength = LibNL3.nl_addr_get_len(addr);
@@ -32,8 +34,8 @@ namespace dotnetlink
                 bytes[i] = ((byte*)LibNL3.nl_addr_get_binary_addr(addr))[i];
             }
             this.Address = new IPAddress(bytes);
-            this.netmask = (byte) LibNL3.nl_addr_get_prefixlen(addr);
-            this.nic = LibNLRoute3.rtnl_addr_get_ifindex(address);
+            this.Netmask = (byte) LibNL3.nl_addr_get_prefixlen(addr);
+            this.Nic = LibNLRoute3.rtnl_addr_get_ifindex(address);
         }
     }
 }

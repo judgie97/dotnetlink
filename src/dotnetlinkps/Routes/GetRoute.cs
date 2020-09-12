@@ -20,14 +20,14 @@ namespace dotnetlinkps.Routes
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            _routes = socket.getRoutingTable();
-            _interfaces = socket.getNetworkInterfaces();
+            _routes = socket.GetRoutingTable();
+            _interfaces = socket.GetNetworkInterfaces();
 
             if (RoutingTable != RoutingTable.ANY)
-                _routes = _routes.Where(r => r.routingTable == RoutingTable).ToArray();
+                _routes = _routes.Where(r => r.RoutingTable == RoutingTable).ToArray();
 
             if (RouteScope != RouteScope.ANY)
-                _routes = _routes.Where(r => r.scope == RouteScope).ToArray();
+                _routes = _routes.Where(r => r.Scope == RouteScope).ToArray();
 
         }
 
@@ -40,13 +40,13 @@ namespace dotnetlinkps.Routes
         {
             RouteDto routeDto = new RouteDto
             {
-                Destination =  route.destination,
-                Gateway = route.gateway,
-                Interface = InterfaceDtoUtil.ConvertToDto(route.nic, _interfaces),
-                Protocol = route.protocol,
-                RoutingTable = route.routingTable,
-                Scope = route.scope,
-                Priority = route.priority
+                Destination =  route.Destination,
+                Gateway = route.Gateway,
+                Interface = InterfaceDtoUtil.ConvertToDto(route.Nic, _interfaces),
+                Protocol = route.Protocol,
+                RoutingTable = route.RoutingTable,
+                Scope = route.Scope,
+                Priority = route.Priority
             };
             WriteObject(routeDto);
         }

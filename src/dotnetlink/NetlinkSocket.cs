@@ -1,92 +1,90 @@
 using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using libnl;
+// ReSharper disable UnusedMember.Global
 
 namespace dotnetlink
 {
     public unsafe class NetlinkSocket
     {
-        private nl_sock* m_sockfd;
+        private nl_sock* _sockFd;
 
         public NetlinkSocket()
         {
-            m_sockfd = LibNL3.nl_socket_alloc();
-            LibNL3.nl_connect(m_sockfd, 0);
+            _sockFd = LibNL3.nl_socket_alloc();
+            LibNL3.nl_connect(_sockFd, 0);
         }
 
         ~NetlinkSocket()
         {
-            LibNL3.nl_close(m_sockfd);
-            LibNL3.nl_socket_free(m_sockfd);
-            m_sockfd = (nl_sock*) 0;
+            LibNL3.nl_close(_sockFd);
+            LibNL3.nl_socket_free(_sockFd);
+            _sockFd = (nl_sock*) 0;
         }
 
 
-        public Route4[] getRoutingTable()
+        public Route4[] GetRoutingTable()
         {
-            Route4[] routes = Connector.RequestAllRoutes(m_sockfd);
+            Route4[] routes = Connector.RequestAllRoutes(_sockFd);
             return routes;
         }
 
-        public void addRoute(Route4 route)
+        public void AddRoute(Route4 route)
         {
-            int r = Connector.AddRoute(m_sockfd, route);
+            int r = Connector.AddRoute(_sockFd, route);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void removeRoute(Route4 route)
+        public void RemoveRoute(Route4 route)
         {
-            int r = Connector.RemoveRoute(m_sockfd, route);
+            int r = Connector.RemoveRoute(_sockFd, route);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void addIPAddress(IPAddress4 address)
+        public void AddIpAddress(IpAddress4 address)
         {
-            int r = Connector.AddIpAddress(m_sockfd, address);
+            int r = Connector.AddIpAddress(_sockFd, address);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void removeIPAddress(IPAddress4 address)
+        public void RemoveIpAddress(IpAddress4 address)
         {
-            int r = Connector.RemoveIpAddress(m_sockfd, address);
+            int r = Connector.RemoveIpAddress(_sockFd, address);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public IPAddress4[] getAddresses()
+        public IpAddress4[] GetAddresses()
         {
-            IPAddress4[] addresses = Connector.RequestAllAddresses(m_sockfd);
+            IpAddress4[] addresses = Connector.RequestAllAddresses(_sockFd);
             return addresses;
         }
 
-        public NetworkInterface[] getNetworkInterfaces()
+        public NetworkInterface[] GetNetworkInterfaces()
         {
-            NetworkInterface[] interfaces = Connector.RequestAllNetworkInterfaces(m_sockfd);
+            NetworkInterface[] interfaces = Connector.RequestAllNetworkInterfaces(_sockFd);
             return interfaces;
         }
         
-        public NetworkInterface getNetworkInterface(String name)
+        public NetworkInterface GetNetworkInterface(string name)
         {
-            NetworkInterface networkInterface = Connector.RequestInterface(m_sockfd, name);
+            NetworkInterface networkInterface = Connector.RequestInterface(_sockFd, name);
             return networkInterface;
         }
 
-        public void setInterfaceState(int index, InterfaceState state)
+        public void SetInterfaceState(int index, InterfaceState state)
         {
-            int r = Connector.SetNetworkInterfaceState(m_sockfd, index, state == InterfaceState.UP);
+            int r = Connector.SetNetworkInterfaceState(_sockFd, index, state == InterfaceState.UP);
             if (r < 0)
             {
                 Console.WriteLine(r);
@@ -94,36 +92,36 @@ namespace dotnetlink
             }
         }
 
-        public void setInterfaceName(int index, String name)
+        public void SetInterfaceName(int index, string name)
         {
-            int r = Connector.SetNetworkInterfaceName(m_sockfd, index, name);
+            int r = Connector.SetNetworkInterfaceName(_sockFd, index, name);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void addNetworkInterface(NetworkInterface networkInterface)
+        public void AddNetworkInterface(NetworkInterface networkInterface)
         {
-            int r = Connector.AddInterface(m_sockfd, networkInterface);
+            int r = Connector.AddInterface(_sockFd, networkInterface);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void removeNetworkInterface(NetworkInterface networkInterface)
+        public void RemoveNetworkInterface(NetworkInterface networkInterface)
         {
-            int r = Connector.RemoveInterface(m_sockfd, networkInterface);
+            int r = Connector.RemoveInterface(_sockFd, networkInterface);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
             }
         }
 
-        public void setInterfaceVlanID(in int nicIndex, ushort vlanId)
+        public void SetInterfaceVlanId(in int nicIndex, ushort vlanId)
         {
-            int r = Connector.SetInterfaceVlanId(m_sockfd, nicIndex, vlanId);
+            int r = Connector.SetInterfaceVlanId(_sockFd, nicIndex, vlanId);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);

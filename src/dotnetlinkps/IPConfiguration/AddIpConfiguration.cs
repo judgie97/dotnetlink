@@ -19,9 +19,9 @@ namespace dotnetlinkps.IPConfiguration
         protected override void BeginProcessing()
         {
             socket = SingletonRepository.getNetlinkSocket();
-            var interfaceIndex = socket.getNetworkInterfaces()
-                .First(i => i.interfaceName.ToLower() == Interface.ToLower()).index;
-            socket.addIPAddress(new IPAddress4(Address, Netmask, interfaceIndex));
+            var interfaceIndex = socket.GetNetworkInterfaces()
+                .First(i => i.InterfaceName.ToLower() == Interface.ToLower()).Index;
+            socket.AddIpAddress(new IpAddress4(Address, Netmask, interfaceIndex));
         }
 
         protected override void ProcessRecord()

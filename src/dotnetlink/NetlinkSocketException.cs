@@ -1,15 +1,17 @@
 using System;
-using System.Runtime.CompilerServices;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace dotnetlink
 {
     public class NetlinkSocketException : Exception
     {
-        public int exceptionValue { get; set; }
+        public int ExceptionValue { get; set; }
 
         public NetlinkSocketException(int exceptionValue) : base(ExceptionString(exceptionValue))
         {
-            this.exceptionValue = exceptionValue;
+            this.ExceptionValue = exceptionValue;
         }
 
         private static string ExceptionString(int value)

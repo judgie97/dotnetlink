@@ -1,6 +1,10 @@
 using System;
 using System.Net;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
 
+// ReSharper disable once CheckNamespace
 namespace dotnetlink
 {
     public class Subnet
@@ -25,11 +29,11 @@ namespace dotnetlink
             Netmask = netmask;
         }
 
-        public Subnet(IPAddress networkAddress, byte CIDR)
+        public Subnet(IPAddress networkAddress, byte cidr)
         {
             NetworkAddress = networkAddress;
             Netmask = 0;
-            for (byte i = 0; i < CIDR; i++)
+            for (byte i = 0; i < cidr; i++)
             {
                 Netmask |= (uint) 1 << i;
             }
@@ -40,7 +44,7 @@ namespace dotnetlink
             return (Netmask & 1u << bit) != 0;
         }
 
-        public int NetmaskCIDR()
+        public int NetmaskCidr()
         {
             int i = 0;
             while (i < 32 && NetmaskBitValue(i))
@@ -52,7 +56,7 @@ namespace dotnetlink
 
         public override string ToString()
         {
-            return NetworkAddress + "/" + NetmaskCIDR();
+            return NetworkAddress + "/" + NetmaskCidr();
         }
     }
 }

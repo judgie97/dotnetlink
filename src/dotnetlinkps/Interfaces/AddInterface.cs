@@ -22,12 +22,12 @@ namespace dotnetlinkps.Interfaces
                 throw new Exception("Parent interface must be specified when creating a Vlan interface");
 
             var parentInterface =
-                socket.getNetworkInterfaces().First(i => i.interfaceName.ToLower() == Parent.ToLower());
+                socket.GetNetworkInterfaces().First(i => i.InterfaceName.ToLower() == Parent.ToLower());
             if (parentInterface == null)
                 throw new Exception("Parent interface could not be found");
-            var networkInterface = new NetworkInterface(parentInterface.index, Name, InterfaceType.BRIDGE,
-                new VLAN((ushort) VlanId));
-            socket.addNetworkInterface(networkInterface);
+            var networkInterface = new NetworkInterface(parentInterface.Index, Name, InterfaceType.BRIDGE,
+                new Vlan((ushort) VlanId));
+            socket.AddNetworkInterface(networkInterface);
         }
 
         protected override void ProcessRecord()

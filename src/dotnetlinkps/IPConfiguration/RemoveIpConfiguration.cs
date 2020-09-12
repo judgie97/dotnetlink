@@ -17,8 +17,8 @@ namespace dotnetlinkps.IPConfiguration
         protected override void BeginProcessing()
         {
             _socket = SingletonRepository.getNetlinkSocket();
-            var nicIndex = _socket.getNetworkInterfaces().First(i => i.interfaceName.ToLower() == Interface.ToLower()).index;
-            _socket.removeIPAddress(new IPAddress4(Address, Netmask, nicIndex));
+            var nicIndex = _socket.GetNetworkInterfaces().First(i => i.InterfaceName.ToLower() == Interface.ToLower()).Index;
+            _socket.RemoveIpAddress(new IpAddress4(Address, Netmask, nicIndex));
         }
 
         protected override void ProcessRecord()

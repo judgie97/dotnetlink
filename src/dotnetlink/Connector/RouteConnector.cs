@@ -31,12 +31,12 @@ namespace dotnetlink
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
             LibNLRoute3.rtnl_route_set_table(nlRoute, (uint) RoutingTable.MAIN);
 
-            uint dest = Util.ip4touint(route4.destination.NetworkAddress);
+            uint dest = Util.Ip4ToUnsignedInt(route4.Destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
-            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.destination.NetmaskCIDR());
+            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.Destination.NetmaskCidr());
             LibNLRoute3.rtnl_route_set_dst(nlRoute, nlDestination);
 
-            uint gateway = Util.ip4touint(route4.gateway);
+            uint gateway = Util.Ip4ToUnsignedInt(route4.Gateway);
             nl_addr* nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, &gateway, 4);
             LibNL3.nl_addr_set_prefixlen(nlGateway, 32);
 
@@ -44,8 +44,8 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_nh_set_gateway(rtnlNexthop, nlGateway);
             LibNLRoute3.rtnl_route_add_nexthop(nlRoute, rtnlNexthop);
 
-            LibNLRoute3.rtnl_route_set_protocol(nlRoute, (byte) route4.protocol);
-            LibNLRoute3.rtnl_route_set_iif(nlRoute, route4.nic);
+            LibNLRoute3.rtnl_route_set_protocol(nlRoute, (byte) route4.Protocol);
+            LibNLRoute3.rtnl_route_set_iif(nlRoute, route4.Nic);
 
             return LibNLRoute3.rtnl_route_delete(socket, nlRoute, NLMessageFlag.REQUEST);
         }
@@ -55,12 +55,12 @@ namespace dotnetlink
             rtnl_route* route = LibNLRoute3.rtnl_route_alloc();
             LibNLRoute3.rtnl_route_set_table(route, (uint) RoutingTable.MAIN);
 
-            uint dest = Util.ip4touint(route4.destination.NetworkAddress);
+            uint dest = Util.Ip4ToUnsignedInt(route4.Destination.NetworkAddress);
             nl_addr* nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, &dest, 4);
-            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.destination.NetmaskCIDR());
+            LibNL3.nl_addr_set_prefixlen(nlDestination, route4.Destination.NetmaskCidr());
             LibNLRoute3.rtnl_route_set_dst(route, nlDestination);
 
-            uint gateway = Util.ip4touint(route4.gateway);
+            uint gateway = Util.Ip4ToUnsignedInt(route4.Gateway);
             nl_addr* nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, &gateway, 4);
             LibNL3.nl_addr_set_prefixlen(nlGateway, 32);
 
@@ -68,8 +68,8 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_nh_set_gateway(rtnlNexthop, nlGateway);
             LibNLRoute3.rtnl_route_add_nexthop(route, rtnlNexthop);
 
-            LibNLRoute3.rtnl_route_set_protocol(route, (byte) route4.protocol);
-            LibNLRoute3.rtnl_route_set_iif(route, route4.nic);
+            LibNLRoute3.rtnl_route_set_protocol(route, (byte) route4.Protocol);
+            LibNLRoute3.rtnl_route_set_iif(route, route4.Nic);
 
             return LibNLRoute3.rtnl_route_add(socket, route, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
