@@ -26,13 +26,13 @@ namespace dotnetlink
 
         public Route4[] getRoutingTable()
         {
-            Route4[] routes = Connector.requestAllRoutes(m_sockfd);
+            Route4[] routes = Connector.RequestAllRoutes(m_sockfd);
             return routes;
         }
 
         public void addRoute(Route4 route)
         {
-            int r = Connector.addRoute(m_sockfd, route);
+            int r = Connector.AddRoute(m_sockfd, route);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -41,7 +41,7 @@ namespace dotnetlink
 
         public void removeRoute(Route4 route)
         {
-            int r = Connector.removeRoute(m_sockfd, route);
+            int r = Connector.RemoveRoute(m_sockfd, route);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -50,7 +50,7 @@ namespace dotnetlink
 
         public void addIPAddress(IPAddress4 address)
         {
-            int r = Connector.addIPAddress(m_sockfd, address);
+            int r = Connector.AddIpAddress(m_sockfd, address);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -59,7 +59,7 @@ namespace dotnetlink
 
         public void removeIPAddress(IPAddress4 address)
         {
-            int r = Connector.removeIPAddress(m_sockfd, address);
+            int r = Connector.RemoveIpAddress(m_sockfd, address);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -68,25 +68,25 @@ namespace dotnetlink
 
         public IPAddress4[] getAddresses()
         {
-            IPAddress4[] addresses = Connector.requestAllAddresses(m_sockfd);
+            IPAddress4[] addresses = Connector.RequestAllAddresses(m_sockfd);
             return addresses;
         }
 
         public NetworkInterface[] getNetworkInterfaces()
         {
-            NetworkInterface[] interfaces = Connector.requestAllNetworkInterfaces(m_sockfd);
+            NetworkInterface[] interfaces = Connector.RequestAllNetworkInterfaces(m_sockfd);
             return interfaces;
         }
         
         public NetworkInterface getNetworkInterface(String name)
         {
-            NetworkInterface networkInterface = Connector.requestInterface(m_sockfd, name);
+            NetworkInterface networkInterface = Connector.RequestInterface(m_sockfd, name);
             return networkInterface;
         }
 
         public void setInterfaceState(int index, InterfaceState state)
         {
-            int r = Connector.setNetworkInterfaceState(m_sockfd, index, state == InterfaceState.UP);
+            int r = Connector.SetNetworkInterfaceState(m_sockfd, index, state == InterfaceState.UP);
             if (r < 0)
             {
                 Console.WriteLine(r);
@@ -96,7 +96,7 @@ namespace dotnetlink
 
         public void setInterfaceName(int index, String name)
         {
-            int r = Connector.setNetworkInterfaceName(m_sockfd, index, name);
+            int r = Connector.SetNetworkInterfaceName(m_sockfd, index, name);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -105,7 +105,7 @@ namespace dotnetlink
 
         public void addNetworkInterface(NetworkInterface networkInterface)
         {
-            int r = Connector.addInterface(m_sockfd, networkInterface);
+            int r = Connector.AddInterface(m_sockfd, networkInterface);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -114,7 +114,7 @@ namespace dotnetlink
 
         public void removeNetworkInterface(NetworkInterface networkInterface)
         {
-            int r = Connector.removeInterface(m_sockfd, networkInterface);
+            int r = Connector.RemoveInterface(m_sockfd, networkInterface);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
@@ -123,7 +123,7 @@ namespace dotnetlink
 
         public void setInterfaceVlanID(in int nicIndex, ushort vlanId)
         {
-            int r = Connector.setInterfaceVlanID(m_sockfd, nicIndex, vlanId);
+            int r = Connector.SetInterfaceVlanId(m_sockfd, nicIndex, vlanId);
             if (r < 0)
             {
                 throw new NetlinkSocketException(r);
