@@ -52,7 +52,7 @@ namespace dotnetlink
             }
         }
 
-        public void AddIpAddress(IpAddress4 address)
+        public void AddIpAddress(IpAddress address)
         {
             int r = Connector.AddIpAddress(_sockFd, address);
             if (r < 0)
@@ -61,7 +61,7 @@ namespace dotnetlink
             }
         }
 
-        public void RemoveIpAddress(IpAddress4 address)
+        public void RemoveIpAddress(IpAddress address)
         {
             int r = Connector.RemoveIpAddress(_sockFd, address);
             if (r < 0)
@@ -70,9 +70,9 @@ namespace dotnetlink
             }
         }
 
-        public IpAddress4[] GetAddresses()
+        public IpAddress[] GetAddresses()
         {
-            IpAddress4[] addresses = Connector.RequestAllAddresses(_sockFd);
+            IpAddress[] addresses = Connector.RequestAllAddresses(_sockFd);
             return addresses;
         }
 

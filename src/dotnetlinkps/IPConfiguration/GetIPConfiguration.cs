@@ -9,7 +9,7 @@ namespace dotnetlinkps.IPConfiguration
     [OutputType(typeof(IpConfigurationDto))]
     public class GetIpConfiguration : PSCmdlet
     {
-        private IpAddress4[] _addresses;
+        private IpAddress[] _addresses;
         private NetworkInterface[] _interfaces;
 
         protected override void BeginProcessing()
@@ -24,14 +24,14 @@ namespace dotnetlinkps.IPConfiguration
             base.ProcessRecord();
         }
 
-        private void WriteIPConfiguration(IpAddress4 ipAddress4, NetworkInterface networkInterface)
+        private void WriteIPConfiguration(IpAddress ipAddress, NetworkInterface networkInterface)
         {
             var interfaceDto = InterfaceDtoUtil.ConvertToDto(networkInterface.Index, _interfaces);
 
             var ipConfigurationDto = new IpConfigurationDto
             {
-                Address =  ipAddress4.Address,
-                SubnetMask = ipAddress4.Netmask,
+                Address =  ipAddress.Address,
+                SubnetMask = ipAddress.Netmask,
                 Interface =  interfaceDto
             };
             WriteObject(ipConfigurationDto);

@@ -3,6 +3,7 @@ using System.Net;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Local
 
 // ReSharper disable once CheckNamespace
 namespace dotnetlink

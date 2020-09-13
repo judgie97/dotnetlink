@@ -21,7 +21,7 @@ namespace dotnetlinkps.IPConfiguration
             socket = SingletonRepository.getNetlinkSocket();
             var interfaceIndex = socket.GetNetworkInterfaces()
                 .First(i => i.InterfaceName.ToLower() == Interface.ToLower()).Index;
-            socket.AddIpAddress(new IpAddress4(Address, Netmask, interfaceIndex));
+            socket.AddIpAddress(new IpAddress(Address, Netmask, interfaceIndex));
         }
 
         protected override void ProcessRecord()
