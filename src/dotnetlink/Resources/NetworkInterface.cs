@@ -23,6 +23,8 @@ namespace dotnetlink
         public bool IsPromiscuousInterface { get; set; }
         public InterfaceType InterfaceType { get; set; }
         public object InterfaceInformation { get; set; }
+        
+        public uint MaximumTransmissionUnit { get; set; }
 
         public NetworkInterface(int parentInterfaceIndex, String interfaceName, InterfaceType interfaceType,
             Object interfaceInformation) :
@@ -115,6 +117,8 @@ namespace dotnetlink
                 var info = new Vlan((ushort) LibNLRoute3.rtnl_link_vlan_get_id(link));
                 InterfaceInformation = info;
             }
+
+            MaximumTransmissionUnit = LibNLRoute3.rtnl_link_get_mtu(link);
         }
     }
 }

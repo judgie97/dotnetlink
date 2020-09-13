@@ -19,6 +19,9 @@ namespace dotnetlink
             if (networkInterface.InterfaceType == InterfaceType.VLAN)
                 LibNLRoute3.rtnl_link_vlan_set_id(nlLink, ((Vlan) (networkInterface.InterfaceInformation)).VlanId);
 
+            if (networkInterface.MaximumTransmissionUnit != 0)
+                LibNLRoute3.rtnl_link_set_mtu(nlLink, networkInterface.MaximumTransmissionUnit);
+
             return LibNLRoute3.rtnl_link_add(socket, nlLink, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
         }
 
@@ -71,6 +74,19 @@ namespace dotnetlink
 
             fixed (byte* n = bytes)
                 LibNLRoute3.rtnl_link_set_name(changed, (char*) n);
+
+            int r = LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
+            return r == -10 ? 0 : r;
+        }
+        
+        public static int SetNetworkInterfaceMaximumTransmissionUnit(nl_sock* socket, int networkInterfaceIndex, uint mtu)
+        {
+            nl_cache* cache;
+            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, networkInterfaceIndex);
+
+            rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
+            LibNLRoute3.rtnl_link_set_mtu(changed, mtu);
 
             int r = LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
             return r == -10 ? 0 : r;

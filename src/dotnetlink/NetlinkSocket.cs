@@ -97,7 +97,7 @@ namespace dotnetlink
                 throw new NetlinkSocketException(r);
             }
         }
-
+        
         public void SetInterfaceName(int index, string name)
         {
             int r = Connector.SetNetworkInterfaceName(_sockFd, index, name);
@@ -107,6 +107,15 @@ namespace dotnetlink
             }
         }
 
+        public void SetNetworkInterfaceMaximumTransmissionUnit(int index, uint mtu)
+        {
+            int r = Connector.SetNetworkInterfaceMaximumTransmissionUnit(_sockFd, index, mtu);
+            if (r < 0)
+            {
+                throw new NetlinkSocketException(r);
+            }
+        }
+        
         public void AddNetworkInterface(NetworkInterface networkInterface)
         {
             int r = Connector.AddInterface(_sockFd, networkInterface);
