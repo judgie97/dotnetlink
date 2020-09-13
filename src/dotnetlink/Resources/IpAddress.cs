@@ -10,11 +10,24 @@ namespace dotnetlink
 {
     public class IpAddress
     {
-        public IPAddress Address { get; set; }
+        private IPAddress _address;
+
+        public IPAddress Address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                Family = _address.AddressFamily == AddressFamily.InterNetwork
+                    ? libnl.AddressFamily.INET
+                    : libnl.AddressFamily.INET6;
+            }
+        }
+
         public byte Netmask { get; set; }
         public int Nic { get; set; }
 
-        public int Family { get; set; }
+        public int Family { get; private set; }
 
         public uint Size()
         {
@@ -26,9 +39,6 @@ namespace dotnetlink
             Address = address;
             Netmask = netmask;
             Nic = nic;
-            Family = address.AddressFamily == AddressFamily.InterNetwork
-                ? libnl.AddressFamily.INET
-                : libnl.AddressFamily.INET6;
         }
 
         public unsafe IpAddress(nl_object* address) : this((rtnl_addr*) address)

@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using libnl;
 using AddressFamily = System.Net.Sockets.AddressFamily;
@@ -10,8 +11,31 @@ namespace dotnetlink
 {
     public class Route
     {
-        public IPAddress Gateway { get; set; }
-        public Subnet Destination { get; set; }
+        private IPAddress _gateway;
+        public IPAddress Gateway
+        {
+            get => _gateway;
+            set
+            {
+                if(value.AddressFamily != _destination.NetworkAddress.AddressFamily)
+                    throw new Exception("Gateway address family must match destination address family");
+                _gateway = value;
+            }
+        }
+
+        private Subnet _destination;
+        public Subnet Destination
+        {
+            get => _destination;
+            set
+            {
+                _destination = value;
+                Family = _destination.NetworkAddress.AddressFamily == AddressFamily.InterNetwork
+                    ? libnl.AddressFamily.INET
+                    : libnl.AddressFamily.INET6;
+            }
+        }
+
         public int Nic { get; set; }
         public RoutingProtocol Protocol { get; set; }
         public RoutingTable RoutingTable { get; set; }
@@ -19,7 +43,7 @@ namespace dotnetlink
 
         public uint Priority { get; set; }
 
-        public int Family { get; set; }
+        public int Family { get; private set; }
 
         public Route(Subnet destination, IPAddress gateway, int nic, RoutingProtocol protocol,
             RoutingTable routingTable)
@@ -29,9 +53,6 @@ namespace dotnetlink
             Nic = nic;
             Protocol = protocol;
             RoutingTable = routingTable;
-            Family = gateway.AddressFamily == AddressFamily.InterNetwork
-                ? libnl.AddressFamily.INET
-                : libnl.AddressFamily.INET6;
         }
 
         public unsafe Route(nl_object* route) : this((rtnl_route*) route)
@@ -40,8 +61,6 @@ namespace dotnetlink
 
         public unsafe Route(rtnl_route* route)
         {
-            Destination = null;
-
             nl_addr* destinationAddress = LibNLRoute3.rtnl_route_get_dst(route);
             byte netmask = (byte) LibNL3.nl_addr_get_prefixlen(destinationAddress);
             uint daddrLen = LibNL3.nl_addr_get_len(destinationAddress);
