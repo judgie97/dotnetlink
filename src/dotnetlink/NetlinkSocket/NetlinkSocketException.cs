@@ -3,6 +3,7 @@ using System;
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
+// ReSharper disable once CheckNamespace
 namespace dotnetlink
 {
     public class NetlinkSocketException : Exception
