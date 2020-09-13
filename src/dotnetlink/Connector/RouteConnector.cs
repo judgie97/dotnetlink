@@ -31,21 +31,15 @@ namespace dotnetlink
         {
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
             LibNLRoute3.rtnl_route_set_table(nlRoute, (uint) RoutingTable.MAIN);
-            LibNLRoute3.rtnl_route_set_family(nlRoute, (byte) (route.Family == AddressFamily.INET ? System.Net.Sockets.AddressFamily.InterNetwork : System.Net.Sockets.AddressFamily.InterNetworkV6));
+            LibNLRoute3.rtnl_route_set_family(nlRoute,
+                (byte) (route.Family == AddressFamily.INET
+                    ? System.Net.Sockets.AddressFamily.InterNetwork
+                    : System.Net.Sockets.AddressFamily.InterNetworkV6));
 
             nl_addr* nlDestination;
             byte[] destinationBytes = route.Destination.NetworkAddress.GetAddressBytes();
             fixed (byte* d = destinationBytes)
-                switch (route.Family)
-                {
-                    case AddressFamily.INET:
-                        nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, d, 4);
-                        break;
-                    case AddressFamily.INET6:
-                        nlDestination = LibNL3.nl_addr_build(AddressFamily.INET6, d, 16);
-                        break;
-                    default: throw new NotSupportedException("Only IPv4 and IPv6 are supported");
-                }
+                nlDestination = LibNL3.nl_addr_build(route.Family, d, (uint) destinationBytes.Length);
 
             LibNL3.nl_addr_set_prefixlen(nlDestination, (int) route.Destination.NetmaskLength);
             LibNLRoute3.rtnl_route_set_dst(nlRoute, nlDestination);
@@ -53,18 +47,9 @@ namespace dotnetlink
             nl_addr* nlGateway;
             byte[] gatewayBytes = route.Gateway.GetAddressBytes();
             fixed (byte* g = gatewayBytes)
-                switch (route.Family)
-                {
-                    case AddressFamily.INET:
-                        nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, g, 4);
-                        break;
-                    case AddressFamily.INET6:
-                        nlGateway = LibNL3.nl_addr_build(AddressFamily.INET6, g, 16);
-                        break;
-                    default: throw new NotSupportedException("Only IPv4 and IPv6 are supported");
-                }
+                nlGateway = LibNL3.nl_addr_build(route.Family, g, (uint) gatewayBytes.Length);
 
-            LibNL3.nl_addr_set_prefixlen(nlGateway, route.Family == AddressFamily.INET ? 32 : 128);
+            LibNL3.nl_addr_set_prefixlen(nlGateway, gatewayBytes.Length * 8);
 
             rtnl_nexthop* rtnlNextHop = LibNLRoute3.rtnl_route_nh_alloc();
             LibNLRoute3.rtnl_route_nh_set_ifindex(rtnlNextHop, route.Nic);
@@ -79,22 +64,16 @@ namespace dotnetlink
         public static int AddRoute(nl_sock* socket, Route route)
         {
             rtnl_route* nlRoute = LibNLRoute3.rtnl_route_alloc();
-            LibNLRoute3.rtnl_route_set_family(nlRoute, (byte) (route.Family == AddressFamily.INET ? System.Net.Sockets.AddressFamily.InterNetwork : System.Net.Sockets.AddressFamily.InterNetworkV6));
+            LibNLRoute3.rtnl_route_set_family(nlRoute,
+                (byte) (route.Family == AddressFamily.INET
+                    ? System.Net.Sockets.AddressFamily.InterNetwork
+                    : System.Net.Sockets.AddressFamily.InterNetworkV6));
             LibNLRoute3.rtnl_route_set_table(nlRoute, (uint) RoutingTable.MAIN);
 
             nl_addr* nlDestination;
             byte[] destinationBytes = route.Destination.NetworkAddress.GetAddressBytes();
             fixed (byte* d = destinationBytes)
-                switch (route.Family)
-                {
-                    case AddressFamily.INET:
-                        nlDestination = LibNL3.nl_addr_build(AddressFamily.INET, d, 4);
-                        break;
-                    case AddressFamily.INET6:
-                        nlDestination = LibNL3.nl_addr_build(AddressFamily.INET6, d, 16);
-                        break;
-                    default: throw new NotSupportedException("Only IPv4 and IPv6 are supported");
-                }
+                nlDestination = LibNL3.nl_addr_build(route.Family, d, (uint) destinationBytes.Length);
 
             LibNL3.nl_addr_set_prefixlen(nlDestination, (int) route.Destination.NetmaskLength);
             LibNLRoute3.rtnl_route_set_dst(nlRoute, nlDestination);
@@ -102,16 +81,8 @@ namespace dotnetlink
             nl_addr* nlGateway;
             byte[] gatewayBytes = route.Gateway.GetAddressBytes();
             fixed (byte* g = gatewayBytes)
-                switch (route.Family)
-                {
-                    case AddressFamily.INET:
-                        nlGateway = LibNL3.nl_addr_build(AddressFamily.INET, g, 4);
-                        break;
-                    case AddressFamily.INET6:
-                        nlGateway = LibNL3.nl_addr_build(AddressFamily.INET6, g, 16);
-                        break;
-                    default: throw new NotSupportedException("Only IPv4 and IPv6 are supported");
-                }
+                nlGateway = LibNL3.nl_addr_build(route.Family, g, (uint) gatewayBytes.Length);
+            
             LibNL3.nl_addr_set_prefixlen(nlGateway, route.Family == AddressFamily.INET ? 32 : 128);
 
             rtnl_nexthop* rtnlNextHop = LibNLRoute3.rtnl_route_nh_alloc();

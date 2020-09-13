@@ -36,7 +36,7 @@ namespace dotnetlink
             byte[] addressBytes = ipAddress.Address.GetAddressBytes();
             fixed (byte* a = addressBytes)
             {
-                nlAddr = LibNL3.nl_addr_build(ipAddress.Family, a, ipAddress.Size());
+                nlAddr = LibNL3.nl_addr_build(AddressFamily.INET, a, ipAddress.Size());
             }
             LibNL3.nl_addr_set_prefixlen(nlAddr, ipAddress.Netmask);
             LibNLRoute3.rtnl_addr_set_local(addr, nlAddr);
