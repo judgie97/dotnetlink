@@ -138,5 +138,10 @@ namespace dotnetlink
         {
             return Connector.GetInterfaceStatistics(_sockFd, networkInterface.Index);
         }
+
+        public Neighbour[] GetArpCache()
+        {
+            return Connector.GetArpCache(_sockFd);
+        }
     }
 }

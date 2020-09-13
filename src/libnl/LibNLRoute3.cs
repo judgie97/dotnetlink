@@ -274,7 +274,7 @@ namespace libnl
         public static extern char* rtnl_link_vlan_flags2str(int flags, char* buf, uint len);
 
         [DllImport("libnl-route-3.so")]
-        public static extern char* rtnl_neigh_flags2str(int flags, char* buf, uint len);
+        public static extern char* rtnl_neigh_flags2str(int flags, sbyte* buf, uint len);
 
         [DllImport("libnl-route-3.so")]
         public static extern char* rtnl_neigh_state2str(int state, char* buf, uint len);
