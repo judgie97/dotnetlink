@@ -10,7 +10,7 @@ namespace dotnetlinkps.Routes
     [OutputType(typeof(RouteDto))]
     public class GetRoute : PSCmdlet
     {
-        private Route4[] _routes;
+        private Route[] _routes;
         private NetworkInterface[] _interfaces;
 
         [Parameter(Mandatory = false)] public RoutingTable RoutingTable { get; set; } = RoutingTable.MAIN;
@@ -36,7 +36,7 @@ namespace dotnetlinkps.Routes
             base.ProcessRecord();
         }
 
-        private void WriteRoute(Route4 route)
+        private void WriteRoute(Route route)
         {
             RouteDto routeDto = new RouteDto
             {

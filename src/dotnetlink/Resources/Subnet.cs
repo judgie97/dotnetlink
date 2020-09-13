@@ -10,7 +10,7 @@ namespace dotnetlink
     public class Subnet
     {
         public IPAddress NetworkAddress { get; set; }
-        public uint Netmask { get; set; }
+        public uint NetmaskLength { get; set; }
 
         public Subnet(String cidr)
         {
@@ -20,43 +20,23 @@ namespace dotnetlink
             
             NetworkAddress = IPAddress.Parse(parts[0]);
 
-            Netmask = UInt32.Parse(parts[1]);
-        }
-
-        public Subnet(IPAddress networkAddress, uint netmask)
-        {
-            NetworkAddress = networkAddress;
-            Netmask = netmask;
+            NetmaskLength = UInt32.Parse(parts[1]);
         }
 
         public Subnet(IPAddress networkAddress, byte cidr)
         {
             NetworkAddress = networkAddress;
-            Netmask = 0;
-            for (byte i = 0; i < cidr; i++)
-            {
-                Netmask |= (uint) 1 << i;
-            }
+            NetmaskLength = cidr;
         }
 
         private bool NetmaskBitValue(int bit)
         {
-            return (Netmask & 1u << bit) != 0;
-        }
-
-        public int NetmaskCidr()
-        {
-            int i = 0;
-            while (i < 32 && NetmaskBitValue(i))
-            {
-                i++;
-            }
-            return i;
+            return bit < NetmaskLength;
         }
 
         public override string ToString()
         {
-            return NetworkAddress + "/" + NetmaskCidr();
+            return NetworkAddress + "/" + NetmaskLength;
         }
     }
 }

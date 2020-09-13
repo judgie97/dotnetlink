@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Threading;
+using System.Linq;
+using System.Net;
 using dotnetlink;
+using libnl;
 
 namespace Sandbox
 {
@@ -9,11 +11,32 @@ namespace Sandbox
         static void Main(string[] args)
         {
             NetlinkSocket socket = new NetlinkSocket();
-            NetworkInterface wlp3s0 = socket.GetNetworkInterface("wlp3s0");
-            for (int i = 0; i < 100; i++)
+            Route[] routes = socket.GetIpv6RoutingTable();
+            foreach (var r in routes)
             {
-                InterfaceStatistics stats = socket.GetInterfaceStatistics(wlp3s0);
-                Thread.Sleep(1000);
+                Console.WriteLine(r);
+            }
+            Console.WriteLine("");
+
+            socket.AddRoute(new Route(new Subnet(IPAddress.Parse("fe81::"), 72), IPAddress.Parse("fe80::1248"), 3,
+                RoutingProtocol.STATIC, RoutingTable.MAIN));
+            Console.WriteLine("");
+
+            routes = socket.GetIpv6RoutingTable();
+            foreach (var r in routes)
+            {
+                Console.WriteLine(r);
+            }
+            Console.WriteLine("");
+
+            socket.RemoveRoute(new Route(new Subnet(IPAddress.Parse("fe81::"), 72), IPAddress.Parse("fe80::1248"), 3,
+                RoutingProtocol.STATIC, RoutingTable.MAIN));
+            Console.WriteLine("");
+
+            routes = socket.GetIpv6RoutingTable();
+            foreach (var r in routes)
+            {
+                Console.WriteLine(r);
             }
         }
     }

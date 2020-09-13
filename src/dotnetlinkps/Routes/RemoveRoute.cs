@@ -8,7 +8,7 @@ namespace dotnetlinkps.Routes
     {
         private NetlinkSocket _socket;
 
-        [Parameter] public Route4 Route { get; set; }
+        [Parameter] public Route Route { get; set; }
 
         protected override void BeginProcessing()
         {

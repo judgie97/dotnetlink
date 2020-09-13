@@ -20,7 +20,7 @@ namespace dotnetlinkps.Routes
         {
             _socket = SingletonRepository.getNetlinkSocket();
             _socket.AddRoute(
-                new Route4(new Subnet(Destination, DestinationSubnetMask), Gateway, 0, Protocol, Table));
+                new Route(new Subnet(Destination, DestinationSubnetMask), Gateway, 0, Protocol, Table));
         }
 
         protected override void ProcessRecord()

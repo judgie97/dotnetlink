@@ -22,13 +22,19 @@ namespace dotnetlink
         }
 
 
-        public Route4[] GetRoutingTable()
+        public Route[] GetRoutingTable()
         {
-            Route4[] routes = Connector.RequestAllRoutes(_sockFd);
+            Route[] routes = Connector.RequestAllRoutes(_sockFd, false);
+            return routes;
+        }
+        
+        public Route[] GetIpv6RoutingTable()
+        {
+            Route[] routes = Connector.RequestAllRoutes(_sockFd, true);
             return routes;
         }
 
-        public void AddRoute(Route4 route)
+        public void AddRoute(Route route)
         {
             int r = Connector.AddRoute(_sockFd, route);
             if (r < 0)
@@ -37,7 +43,7 @@ namespace dotnetlink
             }
         }
 
-        public void RemoveRoute(Route4 route)
+        public void RemoveRoute(Route route)
         {
             int r = Connector.RemoveRoute(_sockFd, route);
             if (r < 0)
