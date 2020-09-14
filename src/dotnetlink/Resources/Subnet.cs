@@ -39,5 +39,29 @@ namespace dotnetlink
         {
             return NetworkAddress + "/" + NetmaskLength;
         }
+
+        public bool Contains(Subnet subnet)
+        {
+            if (NetmaskLength > subnet.NetmaskLength)
+                return false;
+            byte[] currentBytes = NetworkAddress.GetAddressBytes();
+            byte[] otherBytes = subnet.NetworkAddress.GetAddressBytes();
+
+
+            bool match = true;
+            for (int i = 0; i < NetmaskLength; i++)
+            {
+                int group = i / 8;
+                int bit = i % 8;
+                int shift = 1 << bit;
+                int x = currentBytes[group] & shift;
+                int y = otherBytes[group] & shift;
+                if (x != y)
+                    match = false;
+            }
+
+            return match;
+            
+        }
     }
 }
