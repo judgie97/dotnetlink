@@ -17,6 +17,12 @@ namespace dotnetlink
             get => _gateway;
             set
             {
+                if (value == null)
+                {
+                    _gateway = null;
+                    return;
+                }
+
                 if(value.AddressFamily != _destination.NetworkAddress.AddressFamily)
                     throw new Exception("Gateway address family must match destination address family");
                 _gateway = value;

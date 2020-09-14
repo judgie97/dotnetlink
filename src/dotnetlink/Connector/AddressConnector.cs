@@ -62,7 +62,7 @@ namespace dotnetlink
                 current = LibNL3.nl_cache_get_next(current);
             }
 
-            return addresses.Where(a => a.Address.GetAddressBytes().Length == 4).ToArray();
+            return addresses.ToArray();
         }
     }
 }
