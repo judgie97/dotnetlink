@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using libnl;
 using AddressFamily = System.Net.Sockets.AddressFamily;
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -127,6 +128,21 @@ namespace dotnetlink
                 default:
                     return "Unknown";
             }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as Route);
+        }
+
+        protected bool Equals(Route other)
+        {
+            return Equals(_gateway, other._gateway) && Equals(_destination, other._destination) && Nic == other.Nic && Protocol == other.Protocol && RoutingTable == other.RoutingTable && Scope == other.Scope && Priority == other.Priority && Family == other.Family;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_gateway, _destination, Nic, (int) Protocol, (int) RoutingTable, (int) Scope, Priority, Family);
         }
     }
 }

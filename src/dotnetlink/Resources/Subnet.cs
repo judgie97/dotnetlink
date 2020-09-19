@@ -4,6 +4,7 @@ using System.Net;
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMember.Local
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 // ReSharper disable once CheckNamespace
 namespace dotnetlink
@@ -53,7 +54,7 @@ namespace dotnetlink
             {
                 int group = i / 8;
                 int bit = i % 8;
-                int shift = 1 << bit;
+                int shift = 1 << 7 - bit;
                 int x = currentBytes[group] & shift;
                 int y = otherBytes[group] & shift;
                 if (x != y)
@@ -61,7 +62,21 @@ namespace dotnetlink
             }
 
             return match;
-            
+        }
+
+        public override bool Equals(Object obj)
+        {
+            return Equals(obj as Subnet);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(NetworkAddress, NetmaskLength);
+        }
+
+        protected bool Equals(Subnet other)
+        {
+            return NetworkAddress.Equals(other.NetworkAddress) && NetmaskLength == other.NetmaskLength;
         }
     }
 }
