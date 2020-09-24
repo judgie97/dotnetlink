@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Management.Automation;
 using dotnetlink;
 using dotnetlinkps.Interfaces;
@@ -17,10 +18,17 @@ namespace dotnetlinkps.Routes
 
         [Parameter(Mandatory = false)] public RouteScope RouteScope { get; set; } = RouteScope.ANY;
 
+        [Parameter(Mandatory = false)] public int IpVersion { get; set; } = 4;
+
         protected override void BeginProcessing()
         {
             var socket = SingletonRepository.getNetlinkSocket();
-            _routes = socket.GetRoutingTable();
+            if (IpVersion == 4)
+                _routes = socket.GetRoutingTable();
+            else if(IpVersion == 6)
+                _routes = socket.GetIpv6RoutingTable();
+            else
+                throw new NotSupportedException("IP version must be 4 or 6");
             _interfaces = socket.GetNetworkInterfaces();
 
             if (RoutingTable != RoutingTable.ANY)
