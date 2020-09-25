@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using dotnetlink;
 
 namespace Sandbox
@@ -8,11 +9,8 @@ namespace Sandbox
         static void Main(string[] args)
         {
             NetlinkSocket socket = new NetlinkSocket();
-            var addr = socket.GetAddresses();
-            foreach (var x in addr)
-            {
-                Console.WriteLine(x.Address);
-            }
+            Route r = socket.GetRoute(new Subnet(IPAddress.Parse("192.168.2.200"), 25));
+            Console.WriteLine("Test");
         }
     }
 }

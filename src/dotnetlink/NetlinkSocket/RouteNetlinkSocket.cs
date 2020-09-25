@@ -9,6 +9,11 @@ namespace dotnetlink
             return routes;
         }
         
+        public Route GetRoute(Subnet destinationSubnet)
+        {
+            return Connector.RequestRoute(_sockFd, destinationSubnet);
+        }
+        
         public Route[] GetIpv6RoutingTable()
         {
             Route[] routes = Connector.RequestAllRoutes(_sockFd, true);

@@ -1,3 +1,5 @@
+using System;
+
 namespace libnl
 {
     public static class NLMessageFlag
@@ -73,5 +75,25 @@ namespace libnl
         public const int QIPCRTR = 42;
         public const int SMC = 43;
         public const int XDP = 44;
+
+        public static int Convert(System.Net.Sockets.AddressFamily family)
+        {
+            switch (family)
+            {
+                case System.Net.Sockets.AddressFamily.InterNetwork: return INET;
+                case System.Net.Sockets.AddressFamily.InterNetworkV6: return INET6;
+                default: throw new NotImplementedException();
+            }
+        }
+
+        public static uint Size(int family)
+        {
+            switch (family)
+            {
+                case INET: return 4;
+                case INET6: return 16;
+                default: throw new NotImplementedException();
+            }
+        }
     }
 }

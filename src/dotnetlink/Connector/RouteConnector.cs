@@ -1,4 +1,5 @@
 using System;
+using dotnetlink.Extension;
 using libnl;
 
 // ReSharper disable once CheckNamespace
@@ -18,6 +19,7 @@ namespace dotnetlink
             Route[] routes = new Route[count];
 
             nl_object* current = LibNL3.nl_cache_get_first(cache);
+
             for (int i = 0; i < count; i++)
             {
                 routes[i] = new Route(current);
@@ -82,7 +84,7 @@ namespace dotnetlink
             byte[] gatewayBytes = route.Gateway.GetAddressBytes();
             fixed (byte* g = gatewayBytes)
                 nlGateway = LibNL3.nl_addr_build(route.Family, g, (uint) gatewayBytes.Length);
-            
+
             LibNL3.nl_addr_set_prefixlen(nlGateway, route.Family == AddressFamily.INET ? 32 : 128);
 
             rtnl_nexthop* rtnlNextHop = LibNLRoute3.rtnl_route_nh_alloc();
@@ -93,6 +95,39 @@ namespace dotnetlink
             LibNLRoute3.rtnl_route_set_protocol(nlRoute, (byte) route.Protocol);
 
             return LibNLRoute3.rtnl_route_add(socket, nlRoute, NLMessageFlag.REQUEST | NLMessageFlag.ATOMIC);
+        }
+
+        public static Route RequestRoute(nl_sock* socket, Subnet destinationSubnet)
+        {
+            nl_cache* cache;
+            var family = AddressFamily.Convert(destinationSubnet.NetworkAddress.AddressFamily);
+            LibNLRoute3.rtnl_route_alloc_cache(socket,
+                family, 0, &cache);
+            //Check that the number of items is not 0
+            int count = LibNL3.nl_cache_nitems(cache);
+            if (count == 0)
+                return null;
+
+            nl_addr* destinationNetwork;
+            fixed (byte* bytes = destinationSubnet.NetworkAddress.GetAddressBytes())
+            {
+                destinationNetwork = LibNL3.nl_addr_build(family, bytes, AddressFamily.Size(family));
+            }
+
+            nl_object* current = LibNL3.nl_cache_get_first(cache);
+            for (int i = 0; i < count; i++)
+            {
+                nl_addr* dAddr = LibNLRoute3.rtnl_route_get_dst((rtnl_route*) current);
+                if (LibNL3.nl_addr_get_prefixlen(dAddr) == destinationSubnet.NetmaskLength &&
+                    LibNL3.nl_addr_cmp_prefix(dAddr, destinationNetwork) == 0)
+                {
+                    return new Route(current);
+                }
+
+                current = LibNL3.nl_cache_get_next(current);
+            }
+
+            return null;
         }
     }
 }
