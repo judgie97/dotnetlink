@@ -46,7 +46,9 @@ namespace dotnetlink
         public static int SetNetworkInterfaceState(nl_sock* socket, int index, bool up)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, index);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
@@ -66,7 +68,9 @@ namespace dotnetlink
         public static int SetNetworkInterfaceName(nl_sock* socket, int networkInterfaceIndex, string name)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, networkInterfaceIndex);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
@@ -78,11 +82,14 @@ namespace dotnetlink
             int r = LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
             return r == -10 ? 0 : r;
         }
-        
-        public static int SetNetworkInterfaceMaximumTransmissionUnit(nl_sock* socket, int networkInterfaceIndex, uint mtu)
+
+        public static int SetNetworkInterfaceMaximumTransmissionUnit(nl_sock* socket, int networkInterfaceIndex,
+            uint mtu)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, networkInterfaceIndex);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
@@ -91,11 +98,13 @@ namespace dotnetlink
             int r = LibNLRoute3.rtnl_link_change(socket, original, changed, NLMessageFlag.REQUEST);
             return r == -10 ? 0 : r;
         }
-        
+
         public static NetworkInterface[] RequestAllNetworkInterfaces(nl_sock* socket)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             //Check that the number of items is not 0
             int count = LibNL3.nl_cache_nitems(cache);
             if (count == 0)
@@ -112,11 +121,13 @@ namespace dotnetlink
 
             return interfaces;
         }
-        
+
         public static NetworkInterface RequestInterface(nl_sock* socket, String name)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             //Check that the number of items is not 0
             int count = LibNL3.nl_cache_nitems(cache);
             if (count == 0)
@@ -134,11 +145,13 @@ namespace dotnetlink
 
             return networkInterface;
         }
-        
+
         public static int SetInterfaceVlanId(nl_sock* socket, int nicIndex, ushort vlanId)
         {
             nl_cache* cache;
-            LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache);
+            int x;
+            if ((x = LibNLRoute3.rtnl_link_alloc_cache(socket, AddressFamily.INET, &cache)) < 0)
+                throw new NetlinkSocketException(x);
             rtnl_link* original = LibNLRoute3.rtnl_link_get(cache, nicIndex);
 
             rtnl_link* changed = (rtnl_link*) LibNL3.nl_object_clone((nl_object*) original);
