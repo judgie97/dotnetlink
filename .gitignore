@@ -11,6 +11,7 @@ obj
 Build
 cmake-build-release
 cmake-build-debug
+.idea
 
 #allow c# files
 !*.cs
